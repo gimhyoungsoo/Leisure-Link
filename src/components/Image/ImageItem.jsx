@@ -1,7 +1,9 @@
-import ButtonBookmark from "../button/ButtonBookmark";
-import ButtonRecommend from "../button/ButtonRecommend";
+import Modal from "../Common/Modal"
+import ButtonBookmark from "../IconButtons/ButtonBookmark"
+import ButtonRecommend from "../IconButtons/ButtonRecommend";
 import styles from "./ImageItem.module.css";
-import PostModal from "../PostDetail/PostModal";
+
+
 function ImageItem({ data, isMarked }) {
     const handleClickThumbnail = () => {
         //썸네일을 클릭하면 특정 게시글 컴포넌트로 모달 띄움
@@ -11,9 +13,9 @@ function ImageItem({ data, isMarked }) {
     return (
         <div className={styles.container}>
             <figure className={styles.figure}>
-                <PostModal postId={data.postId}>
+                <Modal postId={data.postId} type="postView">
                     <img className={styles.fig_img} onClick={handleClickThumbnail} src={data.thumbnail} alt={``} />
-                </PostModal>
+                </Modal>
                 <figcaption className={styles.figcaption}>
                     <div>
                         <div>

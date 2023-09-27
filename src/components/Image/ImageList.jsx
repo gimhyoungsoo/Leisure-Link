@@ -3,10 +3,8 @@ import styles from "./ImageList.module.css";
 import useInfiniteGetImage from "../../hooks/useInfiniteGetImage";
 import axios from "axios";
 import { useEffect, useState } from "react";
-
-// 로그인 상태 확인 기능
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../state/LoginState";
+import { loginState } from "../../util/state/LoginState"
 
 const BASE_URL = process.env.REACT_APP_API_URL;
 

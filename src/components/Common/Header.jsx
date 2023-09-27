@@ -1,11 +1,11 @@
 import styles from "./Header.module.css";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { Link } from "react-router-dom";
-import Modal from "../UploadModal/Modal";
+import Modal from "./Modal";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../state/LoginState";
-import { LogoutActions } from "../../action/LogoutAction";
+import { loginState } from "../../util/state/LoginState"
+import { LogoutActions } from "../../util/action/LogoutAction";
 import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
@@ -15,13 +15,12 @@ function Header() {
     const [userName, setUserName] = useState("사용자");
     const loginInfo = useRecoilValue(loginState);
     const { handleLogout } = LogoutActions();
-    
+
     useEffect(() => {
         if (loginInfo.login_status) {
             setIsLogin(true);
-            fetchUserData(loginInfo.userId)
+            fetchUserData(loginInfo.userId);
         }
-        console.log(loginInfo)
     }, [loginInfo]);
 
     const fetchUserData = async (userId) => {
@@ -29,7 +28,7 @@ function Header() {
             const response = await axios.get(`${BASE_URL}/users/${userId}`);
             console.log(response);
             const data = response.data.username;
-            setUserName(data)
+            setUserName(data);
         } catch (error) {
             console.log("사용자 정보를 가져오는 데 실패했습니다.", error);
         }
@@ -55,10 +54,12 @@ function Header() {
                 </div>
                 <div className={`${styles.right} ${styles.flex}`}>
                     <div className={styles.add_picture}>
-                        <Modal />
+                        <Modal type="upload">
+                            <button>사진 올리기</button>
+                        </Modal>
                     </div>
                     <div className={styles.user_name}>
-                    {isLogin ? (
+                        {isLogin ? (
                             <>
                                 <Link to="/mypage">{userName}님</Link>
                                 <button onClick={handleLogout}>로그아웃</button>

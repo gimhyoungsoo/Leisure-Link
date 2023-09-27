@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./OAuth.css";
-import kakao_logo from "../assets/kakao_login_medium_wide.png";
+import kakao_logo from "../../assets/kakao_login_medium_wide.png";
 
 function OAuth() {
   useEffect(() => {

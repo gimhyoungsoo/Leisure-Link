@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { AiFillCloseCircle } from "react-icons/ai";
-import styles from "./PostDetail.module.css";
-import CommentComponent from "../Comment/CommentComponent";
+import styles from "./Contents.module.css";
+import Comments from "./Comments";
 import { FaUser } from "react-icons/fa";
-import ButtonBookmark from "../button/ButtonBookmark";
-import ButtonRecommend from "../button/ButtonRecommend";
+import ButtonBookmark from "../IconButtons/ButtonBookmark";
+import ButtonRecommend from "../IconButtons/ButtonRecommend";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../state/LoginState";
+import { loginState } from "../../util/state/LoginState";
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-function PostComponent({ postId, onClose }) {
+function PostDetail({ postId, onClose }) {
     //게시글 관련 상태
     const [postData, setPostData] = useState(null);
     const [editedCaption, setEditedCaption] = useState(""); // 수정한 캡션을 저장
@@ -222,7 +222,7 @@ function PostComponent({ postId, onClose }) {
     };
 
     return (
-        <div className={styles.modal}>
+        <>
             {postData && (
                 <>
                     {" "}
@@ -300,13 +300,13 @@ function PostComponent({ postId, onClose }) {
                                 <p className={styles.postCaption}>{postData.postCaption}</p>
                             )}
 
-                            <CommentComponent postId={postId} />
+                            <Comments postId={postId} />
                         </div>
                     </div>{" "}
                 </>
             )}
-        </div>
+        </>
     );
 }
 
-export default PostComponent;
+export default PostDetail;
