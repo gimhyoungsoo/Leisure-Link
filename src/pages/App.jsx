@@ -1,7 +1,6 @@
 import MainPage from "./MainPage";
 import MyPage from "../components/MyPage/MyPage";
 import React from "react";
-import "./App.css";
 import "../pages/App.module.css";
 import SignupPage from "./SignupPage";
 import LoginPage from "./LoginPage";

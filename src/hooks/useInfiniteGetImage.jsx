@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 function useGetImageList(url, config) {
-    const sentinelRef = useRef(null); // DOM 요소
+
+    const sentinelRef = useRef(null);
     const [pageNum, setPageNum] = useState(config.params.page);
     const [loading, setLoading] = useState(true);
     const [fetchedData, setFetchedData] = useState([]);
@@ -47,7 +48,6 @@ function useGetImageList(url, config) {
             // https://picsum.photos/ 더미 이미지 API
             const response = await axios.get(url, config);
             const responseData = response.data
-            console.log(responseData);
             const data = responseData.hasOwnProperty("data") ? responseData.data : responseData;
             setFetchedData(data);
         } catch (error) {
