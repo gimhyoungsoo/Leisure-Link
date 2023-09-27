@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import "./UserFind.css";
-import { LoginActions } from '../action/LoginAction';
+import { LoginActions } from '../../util/action/LoginAction';
 
 function FindID({ onClose, isFindIdPopupOpen }) {
   const [username, setUsername] = useState('');

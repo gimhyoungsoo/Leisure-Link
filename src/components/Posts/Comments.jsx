@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { FaTrash, FaEdit } from "react-icons/fa";
 import axios from "axios";
-import styles from "./CommentComponent.module.css";
-import { LoginActions } from "../../action/LoginAction";
+import styles from "./Comments.module.css";
+import { LoginActions } from "../../util/action/LoginAction";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../state/LoginState";
+import { loginState } from "../../util/state/LoginState";
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-function CommentComponent({ postId }) {
+function Comment({ postId }) {
     const [comments, setComments] = useState([]); // 댓글 데이터를 저장할 상태
     const [newComment, setNewComment] = useState(""); // 새 댓글 입력 상태
     const [userName, setUserName] = useState("사용자"); // 사용자 이름 상태
@@ -188,4 +188,4 @@ function CommentComponent({ postId }) {
     );
 }
 
-export default CommentComponent;
+export default Comment;

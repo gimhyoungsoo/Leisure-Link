@@ -1,5 +1,5 @@
 /* 모달 창 전체 */
-.modal {
+/* .modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -10,7 +10,7 @@
     justify-content: center;
     align-items: center;
   }
-  
+   */
   /* 모달 컨테이너 */
   .modal_content {
     display: flex;

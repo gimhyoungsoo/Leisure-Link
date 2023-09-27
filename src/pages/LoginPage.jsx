@@ -1,5 +1,5 @@
 import React from "react";
-import Login from "../components/Login";
+import Login from "../components/Account/Login"
 import styles from "../pages/LoginPage.module.css";
 import Header from "../components/Common/Header";
 function LoginPage({ onClose }) {
