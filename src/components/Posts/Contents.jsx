@@ -108,38 +108,6 @@ function PostDetail({ postId, onClose }) {
     }
 
     // 게시글 수정 함수
-    // const handleEditPost = () => {
-    //     // 게시글 작성자의 ID
-    //     const postUserId = postData.user.userId;
-
-    //     if (currentUserId == null) {
-    //         alert("로그인 후 이용해주세요");
-    //     }
-
-    //     // 게시글 작성자와 현재 사용자가 동일한 경우에만 수정 가능
-    //     else if (currentUserId == postUserId) {
-    //         setIsEditing(true);
-    //         // 수정할 내용과 게시글 id를 사용하여 patch 요청을 보냄
-    //         const editData = {
-    //             postCaption: editedCaption, // 수정된 내용
-    //             tags: postData.tags, // 태그 정보는 그대로 사용
-    //         };
-    //         axios
-    //             .patch(`${BASE_URL}/posts/${postId}?userId=${currentUserId}`, editData)
-    //             .then((response) => {
-    //                 console.log("게시글 수정 성공:", response.data);
-    //                 // 수정된 내용을 화면에 반영
-    //                 setPostData({ ...postData, postCaption: editedCaption });
-    //             })
-    //             .catch((error) => {
-    //                 console.error("게시글 수정 중 오류가 발생했습니다:", error);
-    //             });
-    //     } else {
-    //         alert("게시글 작성자와 현재 사용자가 다릅니다. 수정할 수 없습니다.");
-    //     }
-    // };
-
-    // 게시글 수정 함수
     const handleEditPost = () => {
         // 게시글 작성자의 ID
         const postUserId = postData.user.userId;
@@ -225,19 +193,14 @@ function PostDetail({ postId, onClose }) {
         <>
             {postData && (
                 <>
-                    {" "}
-                    <div className={styles.modal_content}>
-                        <div className={styles.postContainer}>
-                            <div className={styles.image_wrap}>
-                                <div className={styles.inner}>
-                                    {/* 이미지 */}
-                                    <img src={postData.postImage} alt="게시글 이미지" className={styles.image} />
-                                </div>
-                            </div>
-
-                            <button onClick={onClose} className={styles.close_button}>
+                    <div className={styles.modal_window}>
+                        <div className={styles.image_section}>
+                            <img src={postData.postImage} alt="게시글 이미지" className={styles.image} />
+                        </div>
+                        <div className={styles.info_section}>
+                            {/* <button onClick={onClose} className={styles.close_button}>
                                 <AiFillCloseCircle />
-                            </button>
+                            </button> */}
                             {/* 수정 버튼 */}
                             <button onClick={handleEditPost} className={styles.edit_button}>
                                 게시글 수정
@@ -299,10 +262,9 @@ function PostDetail({ postId, onClose }) {
                             ) : (
                                 <p className={styles.postCaption}>{postData.postCaption}</p>
                             )}
-
                             <Comments postId={postId} />
                         </div>
-                    </div>{" "}
+                    </div>
                 </>
             )}
         </>
