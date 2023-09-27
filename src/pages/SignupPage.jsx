@@ -1,6 +1,5 @@
 import React from "react";
-import Header from "../components/Common/Header";
-import { SignupActions } from "../action/SignupAction";
+import { SignupActions } from "../util/action/SignupAction";
 import { useNavigate } from 'react-router-dom';
 import './SignupPage.css';
 

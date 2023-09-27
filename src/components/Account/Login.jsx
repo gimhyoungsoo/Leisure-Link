@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./Login.css";
-import { LoginActions } from '../action/LoginAction';
-import OAuth from "../components/OAuth";
+import { LoginActions } from '../../util/action/LoginAction';
+import OAuth from "./OAuth";
 import FindID from "./FindID";
 import FindPassword from "./FindPassword";
 
