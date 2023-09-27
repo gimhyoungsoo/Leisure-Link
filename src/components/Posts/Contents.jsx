@@ -225,84 +225,82 @@ function PostDetail({ postId, onClose }) {
         <>
             {postData && (
                 <>
-                    {" "}
-                    <div className={styles.modal_content}>
+                    <div className={styles.modal_contents}>
                         <div className={styles.postContainer}>
-                            <div className={styles.image_wrap}>
-                                <div className={styles.inner}>
-                                    {/* 이미지 */}
+                            <div className={styles.image_section}>
+                                <div>
                                     <img src={postData.postImage} alt="게시글 이미지" className={styles.image} />
                                 </div>
                             </div>
-
-                            <button onClick={onClose} className={styles.close_button}>
-                                <AiFillCloseCircle />
-                            </button>
-                            {/* 수정 버튼 */}
-                            <button onClick={handleEditPost} className={styles.edit_button}>
-                                게시글 수정
-                            </button>
-
-                            {/* 삭제 버튼 */}
-                            <button onClick={handleDeletePost} className={styles.delete_button}>
-                                게시글 삭제
-                            </button>
-
-                            {/* 수정 완료 버튼 */}
-                            {isEditing && (
-                                <button onClick={handleSaveEdit} className={styles.complete_button}>
-                                    수정 완료
+                            <div className={styles.post_info}>
+                                <button onClick={onClose} className={styles.close_button}>
+                                    <AiFillCloseCircle />
                                 </button>
-                            )}
+                                {/* 수정 버튼 */}
+                                <button onClick={handleEditPost} className={styles.edit_button}>
+                                    게시글 수정
+                                </button>
 
-                            {/* 태그 */}
-                            <div className={styles.tags}>
-                                {postData.tags && postData.tags.map((tag) => <span key={tag}>#{tag}</span>)}
-                            </div>
+                                {/* 삭제 버튼 */}
+                                <button onClick={handleDeletePost} className={styles.delete_button}>
+                                    게시글 삭제
+                                </button>
 
-                            {/* 제목 */}
-                            <p className={styles.postTitle}>{postData.postTitle}</p>
-
-                            {/* 주소 */}
-                            <p className={styles.postAddress}></p>
-
-                            <div className={styles.userInfo}>
-                                {postData.user.profileImage ? (
-                                    <img
-                                        src={postData.user.profileImage}
-                                        alt="프로필 이미지"
-                                        className={styles.profileImage}
-                                    />
-                                ) : (
-                                    <div className={styles.profileIcon}>
-                                        <FaUser size={20} />
-                                    </div>
+                                {/* 수정 완료 버튼 */}
+                                {isEditing && (
+                                    <button onClick={handleSaveEdit} className={styles.complete_button}>
+                                        수정 완료
+                                    </button>
                                 )}
 
-                                <p className={styles.username}>{postData.user.username}</p>
-                                {/* 추천, 북마크자리 */}
-                                {renderMarkButton()}
+                                {/* 태그 */}
+                                <div className={styles.tags}>
+                                    {postData.tags && postData.tags.map((tag) => <span key={tag}>#{tag}</span>)}
+                                </div>
+
+                                {/* 제목 */}
+                                <p className={styles.postTitle}>{postData.postTitle}</p>
+
+                                {/* 주소 */}
+                                <p className={styles.postAddress}></p>
+
+                                <div className={styles.userInfo}>
+                                    {postData.user.profileImage ? (
+                                        <img
+                                            src={postData.user.profileImage}
+                                            alt="프로필 이미지"
+                                            className={styles.profileImage}
+                                        />
+                                    ) : (
+                                        <div className={styles.profileIcon}>
+                                            <FaUser size={20} />
+                                        </div>
+                                    )}
+
+                                    <p className={styles.username}>{postData.user.username}</p>
+                                    {/* 추천, 북마크자리 */}
+                                    {renderMarkButton()}
+                                </div>
+
+                                {/* 날짜 */}
+                                <p className={styles.createdAt}>{formatDate(postData.createdAt)}</p>
+
+                                {/* 캡션 */}
+                                {/* 수정 중이 아니라면 내용을 나타나게 하고, 수정 중이라면 textarea가 나타나도록 함. */}
+                                {isEditing ? (
+                                    <textarea
+                                        value={editedCaption}
+                                        onChange={(e) => setEditedCaption(e.target.value)}
+                                        rows="3"
+                                        cols="35"
+                                    />
+                                ) : (
+                                    <p className={styles.postCaption}>{postData.postCaption}</p>
+                                )}
                             </div>
-
-                            {/* 날짜 */}
-                            <p className={styles.createdAt}>{formatDate(postData.createdAt)}</p>
-
-                            {/* 캡션 */}
-                            {/* 수정 중이 아니라면 내용을 나타나게 하고, 수정 중이라면 textarea가 나타나도록 함. */}
-                            {isEditing ? (
-                                <textarea
-                                    value={editedCaption}
-                                    onChange={(e) => setEditedCaption(e.target.value)}
-                                    rows="3"
-                                    cols="35"
-                                />
-                            ) : (
-                                <p className={styles.postCaption}>{postData.postCaption}</p>
-                            )}
-
                             <Comments postId={postId} />
                         </div>
-                    </div>{" "}
+                    </div>
                 </>
             )}
         </>
