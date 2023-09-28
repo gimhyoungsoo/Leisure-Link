@@ -1,32 +1,30 @@
 import ImageItem from "./ImageItem";
-import styles from "./ImageList.module.css";
-import useInfiniteGetImage from "../../hooks/useInfiniteGetImage";
-import axios from "axios";
+import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../util/state/LoginState"
+import { loginState } from "../../util/state/LoginState";
+import styles from "./ImageList.module.css";
 
-const BASE_URL = process.env.REACT_APP_API_URL;
+const BASE_URL =  process.env.REACT_APP_API_URL
 
-function ImageList({ url, page }) {
-    const [bookmarkedPostId, setBookmarkedPostId] = useState([]);
-    const [recommendedPostId, setRecommendeddPostId] = useState([]);
+function ImageList({ url }) {
+    const loginInfo = useRecoilValue(loginState);
     const [isLogin, setIsLogin] = useState(false);
     const [userId, setUserId] = useState(null);
-
-    const loginInfo = useRecoilValue(loginState);
-
-    // 무한 스크롤 훅
-    const config = { params: { page: page } };
-    const { fetchedData, sentinelRef } = useInfiniteGetImage(url, config);
-
+    const [pageNum, setPageNum] = useState(1);
     const [columnState, setColumnState] = useState({ first: [], second: [], third: [] });
+    const [bookmarkedPostId, setBookmarkedPostId] = useState([]);
+    const [recommendedPostId, setRecommendeddPostId] = useState([]);
+
+    const [targetRef, isIntersecting] = useIntersectionObserver();
 
     useEffect(() => {
-        if (loginInfo.login_status) {
+        if (loginInfo.login_status === true) {
             setIsLogin(true);
             setUserId(loginInfo.userId);
         }
+        getApiData();
     }, []);
 
     useEffect(() => {
@@ -35,10 +33,73 @@ function ImageList({ url, page }) {
             getBookmark();
         }
     }, [isLogin]);
-
     useEffect(() => {
-        ImageDistributer();
-    }, [fetchedData]);
+        console.log(isIntersecting);
+        if (isIntersecting) {
+            getApiData()
+        }
+    }, [isIntersecting]);
+
+    
+
+
+    const getApiData = async () => {
+        try {
+            const config = {
+                params: {
+                    page: pageNum,
+                },
+            };
+            const response = await axios.get(url, config);
+            const targetObj = response.data
+            DistributeImage(targetObj.data);
+            setPageNum((prev) => prev + 1);
+        } catch (error) {
+            console.error("데이터를 불러오는 중 오류 발생:", error);
+            // 오류 토스트 컴포넌트를 여기에 추가할 수 있습니다.
+        }
+    };
+
+    //이미지 분배 로직
+    const DistributeImage = (fetchedData) => {
+        const stock = { first: [], second: [], third: [] };
+        fetchedData.forEach((el, idx) => {
+            if (idx % 3 === 0) {
+                stock.first.push(el);
+            } else if (idx % 3 === 1) {
+                stock.second.push(el);
+            } else {
+                stock.third.push(el);
+            }
+        });
+        setColumnState((prevState) => {
+            return {
+                first: [...prevState.first, ...stock.first],
+                second: [...prevState.second, ...stock.second],
+                third: [...prevState.third, ...stock.third],
+            };
+        });
+    };
+
+    // ImageItem 컴포넌트 렌더링
+    function RenderImageItem({ column }) {
+        return (
+            <div className={styles.column_grid}>
+                {column.map((el) => {
+                    return (
+                        <ImageItem
+                            key={el.postId}
+                            data={el}
+                            isMarked={{
+                                recommend: recommendedPostId.includes(Number(el.postId)),
+                                bookmark: bookmarkedPostId.includes(Number(el.postId)),
+                            }}
+                        />
+                    );
+                })}
+            </div>
+        );
+    }
 
     // 추천 get 통신
     const getRecommmend = async () => {
@@ -69,58 +130,16 @@ function ImageList({ url, page }) {
         }
     };
 
-    //이미지 분배 로직
-    const ImageDistributer = () => {
-        // fetchedData를 map을 사용하여 새로운 배열으로 변환
-        const stock = { first: [], second: [], third: [] };
-        fetchedData.forEach((el, idx) => {
-            if (idx % 3 === 0) {
-                stock.first.push(el);
-            } else if (idx % 3 === 1) {
-                stock.second.push(el);
-            } else {
-                stock.third.push(el);
-            }
-        });
-        // // stack 배열을 초기값으로 사용하여 columnState 업데이트
-        setColumnState((prevState) => {
-            return {
-                first: [...prevState.first, ...stock.first],
-                second: [...prevState.second, ...stock.second],
-                third: [...prevState.third, ...stock.third],
-            };
-        });
-    };
-    // ImageItem 컴포넌트 렌더링
-    const RenderImageItem = ({ column }) => {
-        // columnState의 객체의 key의 수 만큼 ImageItem을 렌더링하면 반응형도 가능할 듯
-        return (
-            <div className={styles.column_grid}>
-                {column.map((el) => {
-                    return (
-                        <ImageItem
-                            key={el.postId}
-                            data={el}
-                            isMarked={{
-                                recommend: recommendedPostId.includes(Number(el.postId)),
-                                bookmark: bookmarkedPostId.includes(Number(el.postId)),
-                            }}
-                        />
-                    );
-                })}
-            </div>
-        );
-    };
     return (
         <>
             <section className={styles.container}>
                 <div className={styles.top_grid}>
-                    <RenderImageItem column={columnState.first} />
-                    <RenderImageItem column={columnState.second} />
-                    <RenderImageItem column={columnState.third} />
+                    {columnState.first.length !== 0 && <RenderImageItem column={columnState.first} />}
+                    {columnState.second.length !== 0 && <RenderImageItem column={columnState.second} />}
+                    {columnState.third.length !== 0 && <RenderImageItem column={columnState.third} />}
                 </div>
             </section>
-            <div className={styles.ht1r} ref={sentinelRef}></div>
+            <div className={styles.sentry} ref={targetRef}></div>
         </>
     );
 }

@@ -1,14 +1,14 @@
 .container {
-    display: flex;
-    justify-content: center;
+    min-height: 100vh;
+    padding-bottom: 50px;
+    background-color: antiquewhite;
 }
 .top_grid {
     display: grid;
-    width: 1500px;
+    width: 100%;
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 1.5rem;
-    row-gap: 1.5rem;
-    /* grid-template-rows: fit-content */
+    row-gap: 1.5rem; 
 }
 .column_grid {
     display: grid;
@@ -17,6 +17,7 @@
     height: fit-content;
 }
 
-.ht1r{
-    height: 1rem;
+.sentry{
+    position: static;
+    bottom: 0;
 }
