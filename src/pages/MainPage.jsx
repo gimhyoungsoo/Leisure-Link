@@ -43,7 +43,7 @@ function MainPage() {
             <Header />
             <Banner />
             <Notice />
-            <ImageList url={`${BASE_URL}/posts`} page={1} />
+            <ImageList url={`${BASE_URL}/posts`} />
         </>
     );
 }
