@@ -19,5 +19,8 @@ export const bookmarkFoldersState = atom({
 
 export const modalState = atom({
   key:"modalState",
-  default:false
+  default:{
+    isOpen:false,
+    modalContents:null
+  }
 })

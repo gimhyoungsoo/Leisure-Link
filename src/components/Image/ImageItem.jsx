@@ -1,21 +1,20 @@
-import Modal from "../Common/Modal"
-import ButtonBookmark from "../IconButtons/ButtonBookmark"
+import Contents from "../Posts/Contents";
+import ButtonBookmark from "../IconButtons/ButtonBookmark";
 import ButtonRecommend from "../IconButtons/ButtonRecommend";
 import styles from "./ImageItem.module.css";
-
+import { useModal } from "../../hooks/useModal";
 
 function ImageItem({ data, isMarked }) {
-    const handleClickThumbnail = () => {
-        //썸네일을 클릭하면 특정 게시글 컴포넌트로 모달 띄움
-        // 그때 data를 전달하면 됨
+    const {openModal} = useModal();
+
+    const handleThumbnailClick = () => {
+        openModal("post", data.postId);
     };
 
     return (
         <div className={styles.container}>
             <figure className={styles.figure}>
-                <Modal postId={data.postId} type="postView">
-                    <img className={styles.fig_img} onClick={handleClickThumbnail} src={data.thumbnail} alt={``} />
-                </Modal>
+                <img className={styles.fig_img} onClick={handleThumbnailClick} src={data.thumbnail} alt={``} />
                 <figcaption className={styles.figcaption}>
                     <div>
                         <div>

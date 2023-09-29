@@ -1,7 +1,7 @@
 import styles from "./Header.module.css";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { Link } from "react-router-dom";
-import Modal from "./Modal";
+import { useModal } from "../../hooks/useModal";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { loginState } from "../../util/state/LoginState"
@@ -15,6 +15,7 @@ function Header() {
     const [userName, setUserName] = useState("사용자");
     const loginInfo = useRecoilValue(loginState);
     const { handleLogout } = LogoutActions();
+    const {openModal} = useModal();
 
     useEffect(() => {
         if (loginInfo.login_status) {
@@ -33,6 +34,11 @@ function Header() {
             console.log("사용자 정보를 가져오는 데 실패했습니다.", error);
         }
     };
+
+    const handleUploadClick = () => {
+        openModal("upload")
+    }
+
     return (
         <header className={styles.header}>
             <div className={`${styles.container} ${styles.flex}`}>
@@ -53,10 +59,8 @@ function Header() {
                     </div>
                 </div>
                 <div className={`${styles.right} ${styles.flex}`}>
-                    <div className={styles.add_picture}>
-                        <Modal type="upload">
+                    <div className={styles.add_picture} onClick={handleUploadClick}>
                             <button>사진 올리기</button>
-                        </Modal>
                     </div>
                     <div className={styles.user_name}>
                         {isLogin ? (
