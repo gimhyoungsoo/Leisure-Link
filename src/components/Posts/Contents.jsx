@@ -41,8 +41,6 @@ function Contents({ postId }) {
 
     const renderMarkButton = () => {
         let result;
-        console.log("추천게시글 목록",recommendedPostId);
-        console.log("북마크게시글 목록",bookmarkedPostId);
         if (Array.isArray(recommendedPostId) && Array.isArray(bookmarkedPostId)) {
             result = (
                 <>
