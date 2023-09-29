@@ -71,6 +71,7 @@ function ButtonBookmark({ postId, isMarked }) {
                 navigate("/LoginPage");
                 closeModal();
             }
+            return null;
         }
         isBookmarked ? deleteBookmark() : postBookmark();
     };

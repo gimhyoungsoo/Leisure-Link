@@ -50,6 +50,7 @@ function ButtonRecommend({ postId, isMarked }) {
                 navigate("/LoginPage");
                 closeModal();
             }
+            return null
         }
         postRecommmend();
     };
