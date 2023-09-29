@@ -7,7 +7,6 @@ export function useModal() {
     const [modalRecoilState, setModalRecoilState] = useRecoilState(modalState);
 
     function openModal(type, postId) {
-        console.log(type, postId);
         let contents;
         switch (type) {
             case "upload":
