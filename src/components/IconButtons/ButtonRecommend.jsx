@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./Button.module.css";
 import { useRecoilValue } from "recoil";
+import { useModal } from "../../hooks/useModal";
 import { loginState } from "../../util/state/LoginState";
+import { useNavigate } from "react-router-dom";
 
 const RECOMMEND_COLOR = "#337CCF";
 
@@ -13,12 +15,14 @@ const BASE_URL = process.env.REACT_APP_API_URL;
 function ButtonRecommend({ postId, isMarked }) {
     const [isRecommended, setIsRecommended] = useState(isMarked);
     const [isLogin, setIsLogin] = useState(false);
-    const [userId, setUserId] = useState(null)
+    const [userId, setUserId] = useState(null);
     const loginInfo = useRecoilValue(loginState);
+    const {closeModal} = useModal();
+    const navigate = useNavigate();
     useEffect(() => {
         if (loginInfo.login_status) {
             setIsLogin(true);
-            setUserId(loginInfo.userId)
+            setUserId(loginInfo.userId);
         }
     }, []);
 
@@ -27,7 +31,7 @@ function ButtonRecommend({ postId, isMarked }) {
         console.log("추천 변경 시도");
         try {
             const response = await axios.post(`${BASE_URL}/recommend/${postId}?userId=${userId}`);
-            console.log(response)
+            console.log(response);
             if (response.status === 200) {
                 setIsRecommended((prev) => !prev);
             } else {
@@ -42,8 +46,12 @@ function ButtonRecommend({ postId, isMarked }) {
     // 클릭 이벤트리스너
     const handleRecommend = () => {
         if (!isLogin) {
-            alert("먼저 로그인을 해주세요");
-            return;
+            const loginConfirm = window.confirm("로그인이 필요합니다. 로그인하시겠습니까?");
+            if(loginConfirm) {
+                navigate("/LoginPage");
+                closeModal()
+            } 
+            return null;
         }
         postRecommmend();
     };

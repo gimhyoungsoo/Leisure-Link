@@ -2,12 +2,7 @@ import { modalState } from "../util/recoil/atom";
 import { useRecoilState } from "recoil";
 import UploadForm from "../components/Posts/UploadForm";
 import Contents from "../components/Posts/Contents";
-/**
- * @param {object} param
- * @param {number} [param.postId]
- * @param {string} param.type
- * @param {JSX.Element} param.children
- */
+
 export function useModal() {
     const [modalRecoilState, setModalRecoilState] = useRecoilState(modalState);
 
@@ -37,5 +32,5 @@ export function useModal() {
         }
     };
 
-    return { modalRecoilState, handleBackdropClick, openModal };
+    return { modalRecoilState, handleBackdropClick, closeModal, openModal };
 }
