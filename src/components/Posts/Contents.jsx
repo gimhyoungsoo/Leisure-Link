@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { AiFillCloseCircle } from "react-icons/ai";
 import styles from "./Contents.module.css";
 import Comments from "./Comments";
 import { FaUser } from "react-icons/fa";
@@ -10,7 +9,7 @@ import { useRecoilValue } from "recoil";
 import { loginState } from "../../util/state/LoginState";
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-function PostDetail({ postId, onClose }) {
+function Contents({ postId }) {
     //게시글 관련 상태
     const [postData, setPostData] = useState(null);
     const [editedCaption, setEditedCaption] = useState(""); // 수정한 캡션을 저장
@@ -42,6 +41,8 @@ function PostDetail({ postId, onClose }) {
 
     const renderMarkButton = () => {
         let result;
+        console.log("추천게시글 목록",recommendedPostId);
+        console.log("북마크게시글 목록",bookmarkedPostId);
         if (Array.isArray(recommendedPostId) && Array.isArray(bookmarkedPostId)) {
             result = (
                 <>
@@ -65,7 +66,6 @@ function PostDetail({ postId, onClose }) {
     const fetchPostData = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/posts/${postId}`);
-            console.log("게시글 데이터:", response.data);
             setPostData(response.data);
             setEditedCaption(response.data.postCaption);
         } catch (error) {
@@ -198,9 +198,6 @@ function PostDetail({ postId, onClose }) {
                             <img src={postData.postImage} alt="게시글 이미지" className={styles.image} />
                         </div>
                         <div className={styles.info_section}>
-                            {/* <button onClick={onClose} className={styles.close_button}>
-                                <AiFillCloseCircle />
-                            </button> */}
                             {/* 수정 버튼 */}
                             <button onClick={handleEditPost} className={styles.edit_button}>
                                 게시글 수정
@@ -271,4 +268,4 @@ function PostDetail({ postId, onClose }) {
     );
 }
 
-export default PostDetail;
+export default Contents;

@@ -21,22 +21,15 @@ function Comment({ postId }) {
         if (loginInfo.login_status && loginInfo.userId) {
             setCurrentUserId(loginInfo.userId);
         }
-    }, []); // loginInfo 객체가 변경될 때 useEffect를 실행
-
-    // currentUserId가 null이 아닐 때에만 출력
-    if (currentUserId !== null) {
-        console.log("currentUserId", currentUserId);
-    }
+    }, []);
 
     useEffect(() => {
         if (loginInfo.login_status) {
             setIsLogin(true);
             fetchUserData(loginInfo.userId);
         }
-        console.log(loginInfo);
     }, [loginInfo]);
 
-    // 게시글의 댓글을 가져오는 API 요청
     useEffect(() => {
         axios
             .get(`${BASE_URL}/comments/posts/${postId}`)
@@ -44,17 +37,11 @@ function Comment({ postId }) {
                 // API에서 가져온 댓글 데이터를 상태에 저장함.
                 const allComments = response.data.data;
                 setComments(allComments);
-                console.log("allComments", allComments);
             })
             .catch((error) => {
                 console.error("댓글 목록을 가져오는 데 실패했습니다.", error);
             });
     }, [postId]);
-
-    // currentUserId가 null이 아닐 때에만 출력
-    if (comments !== null) {
-        console.log("allComments", comments);
-    }
 
     const fetchUserData = async (userId) => {
         console.log("유저아이디", userId);
