@@ -1,5 +1,3 @@
-// import { useRecoilValue } from "recoil";
-// import { loginState } from "../state/LoginState";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import styles from "./Button.module.css";
@@ -17,8 +15,9 @@ function ButtonRecommend({ postId, isMarked }) {
     const [isLogin, setIsLogin] = useState(false);
     const [userId, setUserId] = useState(null);
     const loginInfo = useRecoilValue(loginState);
-    const {closeModal} = useModal();
+    const { closeModal } = useModal();
     const navigate = useNavigate();
+
     useEffect(() => {
         if (loginInfo.login_status) {
             setIsLogin(true);
@@ -47,11 +46,10 @@ function ButtonRecommend({ postId, isMarked }) {
     const handleRecommend = () => {
         if (!isLogin) {
             const loginConfirm = window.confirm("로그인이 필요합니다. 로그인하시겠습니까?");
-            if(loginConfirm) {
+            if (loginConfirm) {
                 navigate("/LoginPage");
-                closeModal()
-            } 
-            return null;
+                closeModal();
+            }
         }
         postRecommmend();
     };
