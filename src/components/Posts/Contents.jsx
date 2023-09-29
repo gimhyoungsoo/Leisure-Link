@@ -112,12 +112,12 @@ function Contents({ postId }) {
         // 게시글 작성자의 ID
         const postUserId = postData.user.userId;
 
-        if (currentUserId == null) {
+        if (currentUserId === null) {
             alert("로그인 후 이용해주세요");
         }
 
         // 게시글 작성자와 현재 사용자가 동일한 경우에만 수정 가능
-        else if (currentUserId == postUserId) {
+        else if (currentUserId === postUserId) {
             setIsEditing(true);
         } else {
             alert("게시글 작성자와 현재 사용자가 다릅니다. 수정할 수 없습니다.");
@@ -132,10 +132,10 @@ function Contents({ postId }) {
         // 수정이 완료되면 isEditing 값을 변경하여 수정 모드 종료
         const postUserId = postData.user.userId;
 
-        if (currentUserId == null) {
+        if (currentUserId === null) {
             alert("로그인 후 이용해주세요");
             setIsEditing(false); // 수정 모드 종료
-        } else if (currentUserId == postUserId) {
+        } else if (currentUserId === postUserId) {
             // 수정할 내용과 게시글 id를 사용하여 patch 요청을 보냄
             const editData = {
                 postCaption: editedCaption, // 수정된 내용
