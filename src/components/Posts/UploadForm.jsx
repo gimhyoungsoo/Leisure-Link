@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from "react";
 import styles from "./UploadForm.module.css";
 import axios from "axios";
 import { BsTrash3Fill } from "react-icons/bs";
-import { AiFillCloseCircle } from "react-icons/ai";
 import { useRecoilValue } from "recoil";
 import { loginState } from "../../util/state/LoginState";
 const BASE_URL = process.env.REACT_APP_API_URL;
@@ -145,119 +144,122 @@ export default function UploadForm({ onClose }) {
     };
 
     return (
-        <div>
-            <form onSubmit={handleSubmit} className={styles.form_container}>
-                <button onClick={onClose} className={styles.close_button}>
-                    <AiFillCloseCircle />
-                </button>
-                <label className={styles.image_section}>
-                    <div className={styles.image_upload_label} onClick={handleClickUpload}>
-                        {imageObjectURL ? (
-                            <>
-                                <img src={imageObjectURL} alt="업로드된 사진" className={styles.image} />
-                                <button
-                                    type="button"
-                                    className={styles.delete_button}
-                                    onClick={() => {
-                                        setImage(null);
-                                        setImageObjectURL(null);
-                                    }}
-                                >
-                                    <BsTrash3Fill />
-                                </button>
-                            </>
-                        ) : (
-                            <div className={styles.image_placeholder}>
-                                최고의 사진을 올려주세요
-                                <div className={styles.image_upload_overlay}>클릭하여 업로드</div>
-                            </div>
-                        )}
-                    </div>
-                </label>
-                <input
-                    name="image"
-                    type="file"
-                    onChange={handleImageChange}
-                    accept="image/*"
-                    className={styles.image_input}
-                    ref={fileInputRef}
-                    required
-                />
-                <div className={styles.text_section}>
-                    {/* <h2 className={styles.user_name}>{email}</h2> */}
+        <>
+            <form className={styles.form_container} onSubmit={handleSubmit}>
+                <div className={styles.left_box}>
+                    <label className={styles.image_section}>
+                        <div className={styles.image_upload_label} onClick={handleClickUpload}>
+                            {imageObjectURL ? (
+                                <>
+                                    <img src={imageObjectURL} alt="업로드된 사진" className={styles.image} />
+                                    <button
+                                        type="button"
+                                        className={styles.delete_button}
+                                        onClick={() => {
+                                            setImage(null);
+                                            setImageObjectURL(null);
+                                        }}
+                                    >
+                                        <BsTrash3Fill />
+                                    </button>
+                                </>
+                            ) : (
+                                <div className={styles.image_placeholder}>
+                                    최고의 사진을 올려주세요
+                                    <div className={styles.image_upload_overlay}>클릭하여 업로드</div>
+                                </div>
+                            )}
+                        </div>
+                    </label>
                     <input
-                        placeholder="사진 속 장소는 어디인가요?"
-                        type="text"
-                        id="place"
-                        value={place}
-                        onChange={(e) => setPlace(e.target.value)}
+                        name="image"
+                        type="file"
+                        onChange={handleImageChange}
+                        accept="image/*"
+                        className={styles.image_input}
+                        ref={fileInputRef}
                         required
-                        className={styles.input_place}
                     />
-                    <input
-                        placeholder="얼마나 멋진 장소인지 설명해주세요!"
-                        type="text"
-                        id="description"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        required
-                        className={styles.input_description}
-                    />
-                    {/* <form className={styles.address_form}>위치 정보가 없을 경우 주소 입력 폼이 나타남</form> */}
-                    <div className={styles.tag_container}>
-                        <ul className={styles.tags}>
-                            {tags.map((tag, index) => (
-                                <li key={index} className={styles.tag}>
-                                    <span className={styles.tag_title}>{tag}</span>
-                                    <span className={styles.tag_close_icon} onClick={() => removeTags(index)}></span>
-                                </li>
-                            ))}
-                        </ul>
+                </div>
+
+                <div className={styles.right_box}>
+                    <div className={styles.input_section}>
                         <input
-                            name="tagInput"
-                            className={styles.tag_input}
+                            placeholder="사진 속 장소는 어디인가요?"
                             type="text"
-                            onKeyUp={(e) => addTags(e)}
-                            placeholder="최대 3개까지 #태그를 입력해주세요 (예시) #바다"
-                            onKeyPress={(e) => {
-                                e.key === "Enter" && e.preventDefault();
-                            }}
+                            id="place"
+                            value={place}
+                            onChange={(e) => setPlace(e.target.value)}
+                            required
+                            className={styles.input_place}
                         />
+                        <input
+                            placeholder="얼마나 멋진 장소인지 설명해주세요!"
+                            type="text"
+                            id="description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                            required
+                            className={styles.input_description}
+                        />
+                        <div className={styles.tag_container}>
+                            <ul className={styles.tags}>
+                                {tags.map((tag, index) => (
+                                    <li key={index} className={styles.tag}>
+                                        <span className={styles.tag_title}>{tag}</span>
+                                        <span
+                                            className={styles.tag_close_icon}
+                                            onClick={() => removeTags(index)}
+                                        ></span>
+                                    </li>
+                                ))}
+                            </ul>
+                            <input
+                                name="tagInput"
+                                className={styles.tag_input}
+                                type="text"
+                                onKeyUp={(e) => addTags(e)}
+                                placeholder="최대 3개까지 #태그를 입력해주세요 (예시) #바다"
+                                onKeyPress={(e) => {
+                                    e.key === "Enter" && e.preventDefault();
+                                }}
+                            />
+                        </div>
+                    </div>
+                    <div className={styles.confirm_section}>
+                        {/* 정보 제공 동의 */}
+                        {/* 위치 정보 동의 체크박스 */}
+                        <label className={styles.checkbox}>
+                            <input
+                                type="checkbox"
+                                checked={addressPermission}
+                                onChange={() => setAddressPermission(!addressPermission)}
+                                required
+                            />
+                            위치 정보 수집에 동의하시나요?
+                        </label>
+
+                        {/* 댓글 기능 해제 체크박스 */}
+                        <label className={styles.checkbox}>
+                            <input
+                                type="checkbox"
+                                checked={commentPermission}
+                                onChange={() => setCommentPermission(!commentPermission)}
+                                required
+                            />
+                            댓글 기능 해제하기
+                        </label>
+                        <button
+                            type="submit"
+                            className={styles.submit_button}
+                            disabled={uploading} // 업로드 중일 때 버튼 비활성화
+                            // onClick={handleSubmit}
+                        >
+                            {uploading ? "업로드 중..." : "게시하기"}
+                        </button>
                     </div>
                 </div>
             </form>
-            <button
-                type="submit"
-                className={styles.submit_button}
-                disabled={uploading} // 업로드 중일 때 버튼 비활성화
-                onClick={handleSubmit}
-            >
-                {uploading ? "업로드 중..." : "게시하기"}
-            </button>
-            {/* 정보 제공 동의 */}
-            <div className={styles.box}>
-                {/* 위치 정보 동의 체크박스 */}
-                <label className={styles.checkbox}>
-                    <input
-                        type="checkbox"
-                        checked={addressPermission}
-                        onChange={() => setAddressPermission(!addressPermission)}
-                        required
-                    />
-                    위치 정보 수집에 동의하시나요?
-                </label>
-
-                {/* 댓글 기능 해제 체크박스 */}
-                <label className={styles.checkbox}>
-                    <input
-                        type="checkbox"
-                        checked={commentPermission}
-                        onChange={() => setCommentPermission(!commentPermission)}
-                        required
-                    />
-                    댓글 기능 해제하기
-                </label>
-            </div>
-        </div>
+        </>
     );
 }

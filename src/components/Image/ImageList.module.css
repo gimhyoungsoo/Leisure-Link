@@ -1,11 +1,11 @@
 .container {
     min-height: 100vh;
     padding-bottom: 50px;
-    background-color: antiquewhite;
 }
 .top_grid {
+    margin: 0 auto;
     display: grid;
-    width: 100%;
+    width: 60vw;
     grid-template-columns: 1fr 1fr 1fr;
     column-gap: 1.5rem;
     row-gap: 1.5rem; 

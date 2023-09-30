@@ -11,3 +11,12 @@
     overflow: auto;
     z-index: 999;
 }
+
+.modal_window {
+    display: flex;
+    max-width: 70vw;
+    max-height: 80vh;
+    border-radius: 0.5rem;
+    background-color: whitesmoke;
+    padding: 30px 15px 30px 15px;
+  }

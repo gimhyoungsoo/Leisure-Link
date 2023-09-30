@@ -1,15 +1,7 @@
 
-  .modal_window {
-    display: flex;
-    width: 80vw;
-    height: 85vh;
-    border-radius: 0.5rem;
-    background-color: whitesmoke;
-    padding: 30px 15px 30px 15px;
-  }
-
   .image_section{
-    flex-grow: 1;
+    min-width: 40vw;
+    min-height: 50vh;
     display: flex;
     justify-content: center;
     overflow: auto;
