@@ -1,17 +1,29 @@
 
   .image_section{
-    min-width: 40vw;
-    min-height: 50vh;
     display: flex;
     justify-content: center;
     overflow: auto;
   }
-
-  .image {
-    max-height: 100%;
-  }
   .info_section {
-    width: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: space-around;
+    width: 100%;
+    min-height: 20%;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
   }
 
-  
+  .user_info{
+    display: flex;
+    align-items: center;
+  }
+
+  .postTitle {
+    font-size: 3rem;
+  }
+
+  .username{
+    margin-left: 0.5rem;
+  }

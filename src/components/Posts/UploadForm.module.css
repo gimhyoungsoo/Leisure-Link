@@ -6,8 +6,12 @@
     justify-content: space-around;
 }
 
+.left_box{
+  flex-grow: 0.8;
+  
+}
+
 .right_box{
-  flex-grow: 1;
   max-width: fit-content;
   position: relative;
 }
@@ -28,7 +32,6 @@
 .input_section {
   max-width: 100%;
   padding: 1rem;
-  border: 2px salmon solid;
 }
 
 .confirm_section{
@@ -59,9 +62,8 @@
 
 /* 이미지 업로드 전체 div */
 .image_upload_label {
-  width: 300px;
+  width: 100%;
   height: 100%;
-  /* border: 1px solid #a7a7a7; */
   cursor: pointer;
   position: relative;
 }

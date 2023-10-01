@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import styles from "./Contents.module.css";
 import Comments from "./Comments";
@@ -18,8 +18,28 @@ function Contents({ postId }) {
     const [currentUserId, setCurrentUserId] = useState(null);
     const [recommendedPostId, setRecommendedPostId] = useState([]);
     const [bookmarkedPostId, setBookmarkedPostId] = useState([]);
-
     const loginInfo = useRecoilValue(loginState);
+
+    //이미지 반응형 관련 훅
+    const imageRef = useRef(null);
+
+    useEffect(() => {
+        if (imageRef.current) {
+            const img = imageRef.current;
+            const handleImageLoad = () => {
+                const { width, height } = img;
+                const isHorizontal = width > height;
+                img.style.width = isHorizontal ? "100%" : "auto";
+                img.style.height = isHorizontal ? "auto" : "100%";
+            };
+
+            img.addEventListener("load", handleImageLoad);
+
+            return () => {
+                img.removeEventListener("load", handleImageLoad);
+            };
+        }
+    });
 
     useEffect(() => {
         fetchPostData();
@@ -187,52 +207,54 @@ function Contents({ postId }) {
             {postData && (
                 <>
                     <div className={styles.image_section}>
-                        <img src={postData.postImage} alt="게시글 이미지" className={styles.image} />
+                        <img src={postData.postImage} alt="게시글 이미지" className={styles.image} ref={imageRef} />
                     </div>
-                    <div className={styles.info_section}>
-                        {/* 수정 버튼 */}
-                        <button onClick={handleEditPost} className={styles.edit_button}>
-                            게시글 수정
-                        </button>
+                    <div>
+                        <div className={styles.info_section}>
 
-                        {/* 삭제 버튼 */}
-                        <button onClick={handleDeletePost} className={styles.delete_button}>
-                            게시글 삭제
-                        </button>
-
-                        {/* 수정 완료 버튼 */}
-                        {isEditing && (
-                            <button onClick={handleSaveEdit} className={styles.complete_button}>
-                                수정 완료
-                            </button>
-                        )}
-
-                        {/* 태그 */}
-                        <div className={styles.tags}>
-                            {postData.tags && postData.tags.map((tag) => <span key={tag}>#{tag}</span>)}
-                        </div>
-
-                        {/* 제목 */}
-                        <p className={styles.postTitle}>{postData.postTitle}</p>
-
-                        {/* 주소 */}
-                        <p className={styles.postAddress}></p>
-
-                        <div className={styles.userInfo}>
-                            {postData.user.profileImage ? (
-                                <img
-                                    src={postData.user.profileImage}
-                                    alt="프로필 이미지"
-                                    className={styles.profileImage}
-                                />
-                            ) : (
-                                <div className={styles.profileIcon}>
-                                    <FaUser size={20} />
+                            {currentUserId === postData.user.userId && (
+                                <div>
+                                    <button onClick={handleEditPost} className={styles.edit_button}>
+                                        게시글 수정
+                                    </button>
+                                    <button onClick={handleDeletePost} className={styles.delete_button}>
+                                        게시글 삭제
+                                    </button>
+                                    {isEditing && (
+                                        <button onClick={handleSaveEdit} className={styles.complete_button}>
+                                            수정 완료
+                                        </button>
+                                    )}
                                 </div>
                             )}
-                            <p className={styles.username}>{postData.user.username}</p>
-                            {/* 추천, 북마크자리 */}
-                            {/* {Array.isArray(recommendedPostId) && Array.isArray(bookmarkedPostId)?
+
+                            {/* 태그 */}
+                            <div className={styles.tags}>
+                                {postData.tags && postData.tags.map((tag) => <span key={tag}>#{tag}</span>)}
+                            </div>
+
+                            {/* 제목 */}
+                            <h1 className={styles.postTitle}>{postData.postTitle}</h1>
+
+                            {/* 주소 */}
+                            <p className={styles.postAddress}></p>
+
+                            {/* 유저정보 */}
+                            <div className={styles.user_info}>
+                                {postData.user.profileImage ? (
+                                    <img
+                                        src={postData.user.profileImage}
+                                        alt="프로필 이미지"
+                                        className={styles.profileImage}
+                                    />
+                                ) : (
+                                    <div className={styles.profileIcon}>
+                                        <FaUser size={20} />
+                                    </div>
+                                )}
+                                <p className={styles.username}>{postData.user.username}</p>
+                                {/* 추천, 북마크자리 */}
+                                {/* {Array.isArray(recommendedPostId) && Array.isArray(bookmarkedPostId)?
                                 <>
                                     <ButtonRecommend
                                         postId={postId}
@@ -248,23 +270,24 @@ function Contents({ postId }) {
                                     <ButtonRecommend postId={postId} isMarked={false} />
                                     <ButtonBookmark postId={postId} isMarked={false} />
                                 </>} */}
+                            </div>
+
+                            {/* 날짜 */}
+                            <p className={styles.createdAt}>{formatDate(postData.createdAt)}</p>
+
+                            {/* 캡션 */}
+                            {/* 수정 중이 아니라면 내용을 나타나게 하고, 수정 중이라면 textarea가 나타나도록 함. */}
+                            {isEditing ? (
+                                <textarea
+                                    value={editedCaption}
+                                    onChange={(e) => setEditedCaption(e.target.value)}
+                                    rows="3"
+                                    cols="35"
+                                />
+                            ) : (
+                                <p className={styles.postCaption}>{postData.postCaption}</p>
+                            )}
                         </div>
-
-                        {/* 날짜 */}
-                        <p className={styles.createdAt}>{formatDate(postData.createdAt)}</p>
-
-                        {/* 캡션 */}
-                        {/* 수정 중이 아니라면 내용을 나타나게 하고, 수정 중이라면 textarea가 나타나도록 함. */}
-                        {isEditing ? (
-                            <textarea
-                                value={editedCaption}
-                                onChange={(e) => setEditedCaption(e.target.value)}
-                                rows="3"
-                                cols="35"
-                            />
-                        ) : (
-                            <p className={styles.postCaption}>{postData.postCaption}</p>
-                        )}
                         <Comments postId={postId} />
                     </div>
                 </>
