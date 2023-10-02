@@ -4,7 +4,7 @@ import axios from "axios";
 import styles from "./Comments.module.css";
 import { LoginActions } from "../../util/action/LoginAction";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../util/state/LoginState";
+import { loginState } from "../../util/recoil/atom";
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 function Comment({ postId }) {
@@ -44,14 +44,12 @@ function Comment({ postId }) {
     }, [postId]);
 
     const fetchUserData = async (userId) => {
-        console.log("유저아이디", userId);
         try {
             const response = await axios.get(`${BASE_URL}/users/${userId}`);
-            console.log(response);
             const data = response.data.username;
             setUserName(data);
         } catch (error) {
-            console.log("사용자 정보를 가져오는 데 실패했습니다.", error);
+            console.error("사용자 정보를 가져오는 데 실패했습니다.", error);
         }
     };
     // 새 댓글을 생성하는 API 요청
@@ -72,13 +70,10 @@ function Comment({ postId }) {
                     },
                     commentText: newComment,
                 };
-                console.log(newCommentObject.user.username);
 
                 await axios.post(`${BASE_URL}/comments/posts/${postId}`, commentData);
 
                 setComments([...comments, newCommentObject]);
-                // setComments((prevComments) => [...prevComments, newCommentObject]);
-                console.log(setComments);
                 setNewComment("");
             } catch (error) {
                 console.error("댓글 생성에 실패했습니다.", error);
@@ -88,7 +83,6 @@ function Comment({ postId }) {
 
     // 댓글을 삭제하는 API 요청
     const handleDeleteComment = async (id) => {
-        console.log(id);
         try {
             await axios.delete(`${BASE_URL}/comments/${id}`);
             const updatedComments = comments.filter((comment) => comment.commentId !== id);
@@ -126,7 +120,7 @@ function Comment({ postId }) {
     return (
         <div className={styles.commentContainer}>
             {/* comments 배열이 비어있을 때 렌더링하지 않도록 조건부 렌더링 */}
-             <div className={styles.addComment}>
+            <div className={styles.addComment}>
                 <span className={styles.userName}>{userName}</span>
                 <input
                     type="text"
@@ -150,22 +144,24 @@ function Comment({ postId }) {
                                         <span className={styles.commentText}> {comment.commentText} </span>
                                     </div>
                                 )}
-                                {currentUserId !== null && comment.user && Number(currentUserId) === Number(comment.user.userId) && (
-                                    <>
-                                        <button
-                                            onClick={() => handleDeleteComment(comment.commentId)}
-                                            className={styles.commentBtn}
-                                        >
-                                            <FaTrash />
-                                        </button>
-                                        <button
-                                            onClick={() => handleEditComment(comment.commentId, comment)}
-                                            className={styles.commentBtn}
-                                        >
-                                            <FaEdit />
-                                        </button>
-                                    </>
-                                )}
+                                {currentUserId !== null &&
+                                    comment.user &&
+                                    Number(currentUserId) === Number(comment.user.userId) && (
+                                        <>
+                                            <button
+                                                onClick={() => handleDeleteComment(comment.commentId)}
+                                                className={styles.commentBtn}
+                                            >
+                                                <FaTrash />
+                                            </button>
+                                            <button
+                                                onClick={() => handleEditComment(comment.commentId, comment)}
+                                                className={styles.commentBtn}
+                                            >
+                                                <FaEdit />
+                                            </button>
+                                        </>
+                                    )}
                             </li>
                         ))}
                     </ul>

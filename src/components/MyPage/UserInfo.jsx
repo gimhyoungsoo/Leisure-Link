@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import axios from "axios";
 import styles from "./UserInfo.module.css";
-import { userState } from "../../util/recoil/atom";
-import { loginState } from "../../util/state/LoginState";
+import { loginState,userState } from "../../util/recoil/atom";
 import userIcon from "../../assets/icon/myuser.svg";
 import SvgEdit from "../../assets/icon/myedit.svg"
 

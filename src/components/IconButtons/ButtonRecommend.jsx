@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../util/state/LoginState";
+import { loginState } from "../../util/recoil/atom";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../hooks/useModal";
 import { useIconButtonAPI } from "../../hooks/useIconButtonAPI";
@@ -22,6 +22,11 @@ function ButtonRecommend({ postId, isMarked }) {
             setUserId(loginInfo.userId);
         }
     }, []);
+    useEffect(() => {
+        if (isRecommended !== isMarked) {
+            setIsRecommended(isMarked);
+        }
+    }, [isMarked]);
 
     // 클릭 이벤트리스너
     const handleRecommend = () => {

@@ -3,10 +3,13 @@ import styles from "./UploadForm.module.css";
 import axios from "axios";
 import { BsTrash3Fill } from "react-icons/bs";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../util/state/LoginState";
+import { loginState } from "../../util/recoil/atom";
+import { useModal } from "../../hooks/useModal";
+
 const BASE_URL = process.env.REACT_APP_API_URL;
 
-export default function UploadForm({ onClose }) {
+export default function UploadForm() {
+    const {closeModal} = useModal()
     const [image, setImage] = useState(null);
     const [imageObjectURL, setImageObjectURL] = useState(null);
 
@@ -102,8 +105,6 @@ export default function UploadForm({ onClose }) {
         formData.append("data", blob);
 
         const Alldata = Object.fromEntries(formData);
-        console.log("formdata", Alldata);
-        console.log(formData.get("postImage"));
 
         setUploading(true);
 
@@ -123,7 +124,7 @@ export default function UploadForm({ onClose }) {
             setPlace("");
             setDescription("");
             setTags([]);
-            onClose();
+            closeModal();
 
             // 업로드 성공 시 alert 창 표시
             alert("업로드에 성공했습니다!");
@@ -227,28 +228,6 @@ export default function UploadForm({ onClose }) {
                         </div>
                     </div>
                     <div className={styles.confirm_section}>
-                        {/* 정보 제공 동의 */}
-                        {/* 위치 정보 동의 체크박스 */}
-                        <label className={styles.checkbox}>
-                            <input
-                                type="checkbox"
-                                checked={addressPermission}
-                                onChange={() => setAddressPermission(!addressPermission)}
-                                required
-                            />
-                            위치 정보 수집에 동의하시나요?
-                        </label>
-
-                        {/* 댓글 기능 해제 체크박스 */}
-                        <label className={styles.checkbox}>
-                            <input
-                                type="checkbox"
-                                checked={commentPermission}
-                                onChange={() => setCommentPermission(!commentPermission)}
-                                required
-                            />
-                            댓글 기능 해제하기
-                        </label>
                         <button
                             type="submit"
                             className={styles.submit_button}

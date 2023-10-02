@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import { useModal } from "../../hooks/useModal";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../util/state/LoginState"
+import { loginState } from "../../util/recoil/atom"
 import { LogoutActions } from "../../util/action/LogoutAction";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
@@ -15,7 +16,8 @@ function Header() {
     const [userName, setUserName] = useState("사용자");
     const loginInfo = useRecoilValue(loginState);
     const { handleLogout } = LogoutActions();
-    const {openModal} = useModal();
+    const {openModal, closeModal} = useModal();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (loginInfo.login_status) {
@@ -35,6 +37,14 @@ function Header() {
     };
 
     const handleUploadClick = () => {
+        if (!isLogin) {
+            const loginConfirm = window.confirm("로그인이 필요합니다. 로그인하시겠습니까?");
+            if (loginConfirm) {
+                navigate("/LoginPage");
+                closeModal();
+            }
+            return null;
+        }
         openModal("upload")
     }
 
