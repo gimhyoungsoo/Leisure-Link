@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
-import styles from "./Button.module.css";
 import { useRecoilValue } from "recoil";
-import { useModal } from "../../hooks/useModal";
 import { loginState } from "../../util/state/LoginState";
 import { useNavigate } from "react-router-dom";
-
+import { useModal } from "../../hooks/useModal";
+import { useIconButtonAPI } from "../../hooks/useIconButtonAPI";
+import styles from "./Button.module.css";
 const RECOMMEND_COLOR = "#337CCF";
-
-const BASE_URL = process.env.REACT_APP_API_URL;
 
 function ButtonRecommend({ postId, isMarked }) {
     const [isRecommended, setIsRecommended] = useState(isMarked);
@@ -16,6 +13,7 @@ function ButtonRecommend({ postId, isMarked }) {
     const [userId, setUserId] = useState(null);
     const loginInfo = useRecoilValue(loginState);
     const { closeModal } = useModal();
+    const { postRecommmend } = useIconButtonAPI();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -25,23 +23,6 @@ function ButtonRecommend({ postId, isMarked }) {
         }
     }, []);
 
-    // API 통신
-    const postRecommmend = async () => {
-        console.log("추천 변경 시도");
-        try {
-            const response = await axios.post(`${BASE_URL}/recommend/${postId}?userId=${userId}`);
-            console.log(response);
-            if (response.status === 200) {
-                setIsRecommended((prev) => !prev);
-            } else {
-                console.error("북마크 정보 post 실패. 응답 코드:", response.status);
-            }
-        } catch (error) {
-            console.error(error.code, "추천 정보 post 실패");
-            alert("서버와의 통신 오류로 추천이 변경되지 않았습니다.");
-        }
-    };
-
     // 클릭 이벤트리스너
     const handleRecommend = () => {
         if (!isLogin) {
@@ -50,9 +31,11 @@ function ButtonRecommend({ postId, isMarked }) {
                 navigate("/LoginPage");
                 closeModal();
             }
-            return null
+            return null;
         }
-        postRecommmend();
+        if (postRecommmend(postId, userId)) {
+            setIsRecommended((prev) => !prev);
+        }
     };
 
     const RecommendIcon = () => {

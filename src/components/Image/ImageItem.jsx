@@ -1,4 +1,3 @@
-import Contents from "../Posts/Contents";
 import ButtonBookmark from "../IconButtons/ButtonBookmark";
 import ButtonRecommend from "../IconButtons/ButtonRecommend";
 import styles from "./ImageItem.module.css";
@@ -23,7 +22,6 @@ function ImageItem({ data, isMarked }) {
                         <div>
                             <ButtonBookmark postId={data.postId} isMarked={isMarked.bookmark} />
                         </div>
-                        {/* <div>*위치*</div> */}
                     </div>
                 </figcaption>
             </figure>
