@@ -27,7 +27,6 @@ function Header() {
     const fetchUserData = async (userId) => {
         try {
             const response = await axios.get(`${BASE_URL}/users/${userId}`);
-            console.log(response);
             const data = response.data.username;
             setUserName(data);
         } catch (error) {
