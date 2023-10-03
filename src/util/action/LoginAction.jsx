@@ -3,6 +3,7 @@ import axios from "axios";
 import { loginState } from "../recoil/atom";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY;
 
 export function LoginActions() {
     const [loginInfo, setLoginInfo] = useRecoilState(loginState);
@@ -65,15 +66,17 @@ export function LoginActions() {
             password: currentState.password,
         };
 
+        const axiosConfig = {
+            headers: {
+                "x-cors-api-key": PROXY_KEY,
+            },
+        };
+
         try {
-            const response = await axios.post(`${BASE_URL}/users/login`, requestData);
-            console.log("로그인을 시도합니다:", response.data);
+            const response = await axios.post(`${BASE_URL}/users/login`, requestData, axiosConfig);
             const accessToken = response.data.accessToken;
             const refreshToken = response.data.refreshToken;
             setUserId(response.data.userId);
-            // console.log(
-            //   `엑세스토큰 : ${accessToken}, 리프레쉬토큰 : ${refreshToken}`
-            // );
             localStorage.setItem("accessToken", accessToken);
             localStorage.setItem("refreshToken", refreshToken);
             axios.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
@@ -87,7 +90,7 @@ export function LoginActions() {
                 if (refreshToken) {
                     try {
                         // 리프레쉬토큰을 사용하여 새로운 Access Token 발급 요청
-                        const refreshResponse = await axios.post(`${BASE_URL}/users/login`, refreshToken);
+                        const refreshResponse = await axios.post(`${BASE_URL}/users/login`, refreshToken, axiosConfig);
                         const newAccessToken = refreshResponse.data.token;
                         localStorage.setItem("accessToken", newAccessToken);
                         axios.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
@@ -95,16 +98,16 @@ export function LoginActions() {
                             email: currentState.email,
                             password: currentState.password,
                         };
-                        const retryResponse = await axios.post(`${BASE_URL}/users/login`, retryRequestData);
-                        console.log("로그인을 재시도합니다:", retryResponse.data);
+                        const retryResponse = await axios.post(
+                            `${BASE_URL}/users/login`,
+                            retryRequestData,
+                            axiosConfig,
+                        );
                         setLoginError(false);
                         setLoginStatus(true);
                         return true;
                     } catch (refreshError) {
                         console.error("Refresh token error:", refreshError);
-                        // Refresh Token도 만료되었거나 유효하지 않은 경우
-                        // 여기서는 로그아웃 처리
-                        console.log(refreshError.response.status);
                         setLoginError(true);
                         return false;
                     }
@@ -113,7 +116,7 @@ export function LoginActions() {
                     console.log("No refresh token available");
                     setLoginError(true);
                     return false;
-                }       
+                }
             }
         }
     };
@@ -133,5 +136,5 @@ export function LoginActions() {
         invalidEmail: loginInfo.invalidEmail,
         invalidPassword: loginInfo.invalidPassword,
         login_status: loginInfo.login_status,
-    }; 
+    };
 }

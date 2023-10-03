@@ -2,6 +2,13 @@ import axios from "axios";
 import { useState } from "react";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY;
+
+const axiosConfig = {
+    headers: {
+        "x-cors-api-key": PROXY_KEY,
+    },
+};
 
 export function useIconButtonAPI() {
     // 추천
@@ -9,7 +16,7 @@ export function useIconButtonAPI() {
     const getRecommend = async (userId) => {
         if (userId) {
             try {
-                const response = await axios.get(`${BASE_URL}/recommend/${userId}`);
+                const response = await axios.get(`${BASE_URL}/recommend/${userId}`, axiosConfig);
                 const data = await response.data;
                 setRecommendedPostId(data.map((el) => el.postId));
             } catch (error) {
@@ -20,7 +27,7 @@ export function useIconButtonAPI() {
 
     const postRecommmend = async (postId, userId) => {
         try {
-            const response = await axios.post(`${BASE_URL}/recommend/${postId}?userId=${userId}`);
+            const response = await axios.post(`${BASE_URL}/recommend/${postId}?userId=${userId}`, {}, axiosConfig);
             if (response.status === 200) {
                 return true;
             } else {
@@ -39,7 +46,7 @@ export function useIconButtonAPI() {
     const getBookmark = async (userId) => {
         if (userId) {
             try {
-                const response = await axios.get(`${BASE_URL}/bookmarks/${userId}`);
+                const response = await axios.get(`${BASE_URL}/bookmarks/${userId}`, axiosConfig);
                 const data = await response.data;
                 setBookmarkedPostId(data.map((el) => el.post_id));
             } catch (error) {
@@ -50,11 +57,15 @@ export function useIconButtonAPI() {
 
     const postBookmark = async (postId, userId) => {
         try {
-            const response = await axios.post(`${BASE_URL}/bookmarks`, {
-                post_id: postId,
-                user_id: userId,
-                bookmark_name: "",
-            });
+            const response = await axios.post(
+                `${BASE_URL}/bookmarks`,
+                {
+                    post_id: postId,
+                    user_id: userId,
+                    bookmark_name: "",
+                },
+                axiosConfig,
+            );
 
             if (response.status === 201) {
                 return true;
@@ -74,6 +85,9 @@ export function useIconButtonAPI() {
                 data: {
                     post_id: postId,
                     user_id: userId,
+                },
+                headers: {
+                    "x-cors-api-key": PROXY_KEY,
                 },
             });
             if ((response.status === 200, response.status === 204)) {

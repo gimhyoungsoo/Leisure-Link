@@ -7,6 +7,8 @@ import { loginState, modalState } from "../../util/recoil/atom";
 import { useIconButtonAPI } from "../../hooks/useIconButtonAPI";
 import styles from "./ImageList.module.css";
 
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY;
+
 function ImageList({ url }) {
     const loginInfo = useRecoilValue(loginState);
     const [isLogin, setIsLogin] = useState(false);
@@ -49,12 +51,15 @@ function ImageList({ url }) {
 
     const getImageData = async () => {
         try {
-            const config = {
+            const AxiosConfig = {
+                headers: {
+                    "x-cors-api-key": PROXY_KEY,
+                },
                 params: {
                     page: pageNum,
                 },
             };
-            const response = await axios.get(url, config);
+            const response = await axios.get(url, AxiosConfig);
             const targetObj = response.data;
             DistributeImage(targetObj.data);
             setPageNum((prev) => prev + 1);

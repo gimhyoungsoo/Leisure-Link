@@ -3,6 +3,7 @@ import axios from 'axios';
 import { loginState } from '../recoil/atom';
 
 const BASE_URL = process.env.REACT_APP_API_URL;
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY
 
 export function LogoutActions() {
   const [loginInfo, setLoginInfo] = useRecoilState(loginState);
@@ -14,7 +15,8 @@ export function LogoutActions() {
           { email:loginInfo.email },
           {
             headers: {
-              Authorization: `Bearer ${accessToken}`
+              Authorization: `Bearer ${accessToken}`,
+              "x-cors-api-key": PROXY_KEY,
             },
           }
         );

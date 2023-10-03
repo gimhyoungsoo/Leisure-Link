@@ -3,6 +3,7 @@ import axios from "axios";
 import { signupState } from "../recoil/atom";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY
 
 export function SignupActions() {
     const [signupInfo, setSignupInfo] = useRecoilState(signupState);
@@ -82,7 +83,7 @@ export function SignupActions() {
         try {
             const response = await axios.post(`${BASE_URL}/users/signup`, requestData, {
                 headers: {
-                    "x-cors-api-key": "temp_b38f3e56f2d36942d61c74d37da549cf",
+                    "x-cors-api-key": PROXY_KEY,
                 },
             });
             console.log("회원 정보가 저장되었습니다:", response.data);

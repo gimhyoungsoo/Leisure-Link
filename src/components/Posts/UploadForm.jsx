@@ -7,9 +7,10 @@ import { loginState } from "../../util/recoil/atom";
 import { useModal } from "../../hooks/useModal";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY;
 
 export default function UploadForm() {
-    const {closeModal} = useModal()
+    const { closeModal } = useModal();
     const [image, setImage] = useState(null);
     const [imageObjectURL, setImageObjectURL] = useState(null);
 
@@ -34,11 +35,6 @@ export default function UploadForm() {
             setCurrentUserId(loginInfo.userId);
         }
     }, []); // loginInfo 객체가 변경될 때 useEffect를 실행
-
-    // currentUserId가 null이 아닐 때에만 출력
-    if (currentUserId !== null) {
-        console.log(currentUserId);
-    }
 
     const removeTags = (indexToRemove) => {
         const filter = tags.filter((el, index) => index !== indexToRemove);
@@ -81,7 +77,6 @@ export default function UploadForm() {
                 setImage(file);
                 const objectURL = URL.createObjectURL(file);
                 setImageObjectURL(objectURL);
-                console.log(objectURL);
             };
         }
     };
@@ -112,6 +107,7 @@ export default function UploadForm() {
             const axiosConfig = {
                 headers: {
                     "Content-Type": "multipart/form-data",
+                    "x-cors-api-key": PROXY_KEY,
                 },
             };
 
@@ -232,7 +228,6 @@ export default function UploadForm() {
                             type="submit"
                             className={styles.submit_button}
                             disabled={uploading} // 업로드 중일 때 버튼 비활성화
-                            // onClick={handleSubmit}
                         >
                             {uploading ? "업로드 중..." : "게시하기"}
                         </button>

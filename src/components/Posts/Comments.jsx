@@ -5,7 +5,15 @@ import styles from "./Comments.module.css";
 import { LoginActions } from "../../util/action/LoginAction";
 import { useRecoilValue } from "recoil";
 import { loginState } from "../../util/recoil/atom";
+
 const BASE_URL = process.env.REACT_APP_API_URL;
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY;
+
+const axiosConfig = {
+    headers: {
+        "x-cors-api-key": PROXY_KEY,
+    },
+};
 
 function Comment({ postId }) {
     const [comments, setComments] = useState([]); // 댓글 데이터를 저장할 상태
@@ -32,7 +40,7 @@ function Comment({ postId }) {
 
     useEffect(() => {
         axios
-            .get(`${BASE_URL}/comments/posts/${postId}`)
+            .get(`${BASE_URL}/comments/posts/${postId}`, axiosConfig)
             .then((response) => {
                 // API에서 가져온 댓글 데이터를 상태에 저장함.
                 const allComments = response.data.data;
@@ -45,7 +53,7 @@ function Comment({ postId }) {
 
     const fetchUserData = async (userId) => {
         try {
-            const response = await axios.get(`${BASE_URL}/users/${userId}`);
+            const response = await axios.get(`${BASE_URL}/users/${userId}`, axiosConfig);
             const data = response.data.username;
             setUserName(data);
         } catch (error) {
@@ -71,7 +79,7 @@ function Comment({ postId }) {
                     commentText: newComment,
                 };
 
-                await axios.post(`${BASE_URL}/comments/posts/${postId}`, commentData);
+                await axios.post(`${BASE_URL}/comments/posts/${postId}`, commentData, axiosConfig);
 
                 setComments([...comments, newCommentObject]);
                 setNewComment("");
@@ -84,7 +92,7 @@ function Comment({ postId }) {
     // 댓글을 삭제하는 API 요청
     const handleDeleteComment = async (id) => {
         try {
-            await axios.delete(`${BASE_URL}/comments/${id}`);
+            await axios.delete(`${BASE_URL}/comments/${id}`, axiosConfig);
             const updatedComments = comments.filter((comment) => comment.commentId !== id);
             setComments(updatedComments);
         } catch (error) {
@@ -100,10 +108,14 @@ function Comment({ postId }) {
         );
         if (editedComment !== null) {
             try {
-                const response = await axios.patch(`${BASE_URL}/comments/${id}`, {
-                    userId: currentUserId,
-                    commentText: editedComment,
-                });
+                const response = await axios.patch(
+                    `${BASE_URL}/comments/${id}`,
+                    {
+                        userId: currentUserId,
+                        commentText: editedComment,
+                    },
+                    axiosConfig,
+                );
 
                 // 수정 후에 서버에서 다시 댓글 목록을 가져와서 상태를 업데이트
                 const updatedComment = response.data;

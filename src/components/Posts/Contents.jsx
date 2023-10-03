@@ -8,15 +8,24 @@ import ButtonRecommend from "../IconButtons/ButtonRecommend";
 import { useRecoilValue } from "recoil";
 import { loginState } from "../../util/recoil/atom";
 import { useIconButtonAPI } from "../../hooks/useIconButtonAPI";
+import { useModal } from "../../hooks/useModal";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY;
 
+const axiosConfig = {
+    headers: {
+        "x-cors-api-key": PROXY_KEY,
+    },
+};
 function Contents({ postId }) {
     //게시글 관련 상태
     const [postData, setPostData] = useState(null);
     const [editedCaption, setEditedCaption] = useState(""); // 수정한 캡션을 저장
     const [isEditing, setIsEditing] = useState(false);
     const { getRecommend, recommendedPostId, getBookmark, bookmarkedPostId } = useIconButtonAPI();
+    const {closeModal} = useModal()
+
     //로그인 관련 상태
     const [currentUserId, setCurrentUserId] = useState(null);
     const loginInfo = useRecoilValue(loginState);
@@ -45,7 +54,7 @@ function Contents({ postId }) {
     useEffect(() => {
         fetchPostData();
         if (loginInfo.login_status) {
-            setCurrentUserId(loginInfo.userId);
+            setCurrentUserId(Number(loginInfo.userId));
         }
     }, []);
 
@@ -59,7 +68,7 @@ function Contents({ postId }) {
     // 특정 게시글의 데이터를 받아오는 함수
     const fetchPostData = async () => {
         try {
-            const response = await axios.get(`${BASE_URL}/posts/${postId}`);
+            const response = await axios.get(`${BASE_URL}/posts/${postId}`, axiosConfig);
             setPostData(response.data);
             setEditedCaption(response.data.postCaption);
         } catch (error) {
@@ -78,7 +87,7 @@ function Contents({ postId }) {
     // 게시글 수정 함수
     const handleEditPost = () => {
         // 게시글 작성자의 ID
-        const postUserId = postData.user.userId;
+        const postUserId = Number(postData.user.userId);
 
         if (currentUserId === null) {
             alert("로그인 후 이용해주세요");
@@ -110,7 +119,7 @@ function Contents({ postId }) {
                 tags: postData.tags, // 태그 정보는 그대로 사용
             };
             axios
-                .patch(`${BASE_URL}/posts/${postId}?userId=${currentUserId}`, editData)
+                .patch(`${BASE_URL}/posts/${postId}?userId=${currentUserId}`, editData, axiosConfig)
                 .then((response) => {
                     setPostData({ ...postData, postCaption: editedCaption });
                     setIsEditing(false); // 수정 모드 종료
@@ -127,7 +136,7 @@ function Contents({ postId }) {
 
     // 게시글 삭제 함수
     const handleDeletePost = () => {
-        const postUserId = postData.user.userId;
+        const postUserId = Number(postData.user.userId);
 
         if (currentUserId === null) {
             // User is not logged in, show an alert
@@ -136,9 +145,13 @@ function Contents({ postId }) {
         }
 
         // 게시글 작성자와 현재 사용자가 동일한 경우에만 삭제 가능
-        if (Number(currentUserId) === Number(postUserId)) {
+        if (currentUserId === Number(postUserId)) {
             // 게시글 ID와 유저 ID를 사용하여 DELETE 요청을 보냄
-            axios.delete(`${BASE_URL}/posts/${postId}?userId=${currentUserId}`).catch((error) => {
+            axios.delete(`${BASE_URL}/posts/${postId}?userId=${currentUserId}`, axiosConfig)
+            .then((response)=>{
+                closeModal()
+            })
+            .catch((error) => {
                 console.error("게시글 삭제 중 오류가 발생했습니다:", error);
             });
         } else {
@@ -156,7 +169,7 @@ function Contents({ postId }) {
                     </div>
                     <div>
                         <div className={styles.info_section}>
-                            {Number(currentUserId) === Number(postData.user.userId) && (
+                            {currentUserId === Number(postData.user.userId) && (
                                 <div>
                                     <button onClick={handleEditPost} className={styles.edit_button}>
                                         게시글 수정
