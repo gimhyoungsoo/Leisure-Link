@@ -24,7 +24,7 @@ function Contents({ postId }) {
     const [editedCaption, setEditedCaption] = useState(""); // 수정한 캡션을 저장
     const [isEditing, setIsEditing] = useState(false);
     const { getRecommend, recommendedPostId, getBookmark, bookmarkedPostId } = useIconButtonAPI();
-    const {closeModal} = useModal()
+    const { closeModal } = useModal();
 
     //로그인 관련 상태
     const [currentUserId, setCurrentUserId] = useState(null);
@@ -147,13 +147,14 @@ function Contents({ postId }) {
         // 게시글 작성자와 현재 사용자가 동일한 경우에만 삭제 가능
         if (currentUserId === Number(postUserId)) {
             // 게시글 ID와 유저 ID를 사용하여 DELETE 요청을 보냄
-            axios.delete(`${BASE_URL}/posts/${postId}?userId=${currentUserId}`, axiosConfig)
-            .then((response)=>{
-                closeModal()
-            })
-            .catch((error) => {
-                console.error("게시글 삭제 중 오류가 발생했습니다:", error);
-            });
+            axios
+                .delete(`${BASE_URL}/posts/${postId}?userId=${currentUserId}`, axiosConfig)
+                .then((response) => {
+                    closeModal();
+                })
+                .catch((error) => {
+                    console.error("게시글 삭제 중 오류가 발생했습니다:", error);
+                });
         } else {
             // 게시글 작성자와 현재 사용자가 다른 경우 삭제할 수 없음을 알림
             alert("게시글 작성자와 현재 사용자가 다릅니다. 삭제할 수 없습니다.");

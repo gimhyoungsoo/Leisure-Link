@@ -112,10 +112,7 @@ export default function UploadForm() {
             };
 
             const response = await axios.post(`${BASE_URL}/posts`, formData, axiosConfig);
-            console.log(response.data);
-
             setUploadSuccess(true);
-            console.log(uploadSuccess);
             setImage(null);
             setPlace("");
             setDescription("");
