@@ -22,6 +22,7 @@ function ButtonRecommend({ postId, isMarked }) {
             setUserId(loginInfo.userId);
         }
     }, []);
+  
     useEffect(() => {
         if (isRecommended !== isMarked) {
             setIsRecommended(isMarked);

@@ -78,9 +78,7 @@ function Comment({ postId }) {
                     },
                     commentText: newComment,
                 };
-
                 await axios.post(`${BASE_URL}/comments/posts/${postId}`, commentData, axiosConfig);
-
                 setComments([...comments, newCommentObject]);
                 setNewComment("");
             } catch (error) {
@@ -116,7 +114,6 @@ function Comment({ postId }) {
                     },
                     axiosConfig,
                 );
-
                 // 수정 후에 서버에서 다시 댓글 목록을 가져와서 상태를 업데이트
                 const updatedComment = response.data;
                 const updatedComments = comments.map((comment) =>

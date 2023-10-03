@@ -28,6 +28,7 @@ function Contents({ postId }) {
 
     //로그인 관련 상태
     const [currentUserId, setCurrentUserId] = useState(null);
+
     const loginInfo = useRecoilValue(loginState);
 
     //이미지 반응형 관련 훅
@@ -75,7 +76,7 @@ function Contents({ postId }) {
             console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
         }
     };
-
+  
     function formatDate(dateString) {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -88,11 +89,9 @@ function Contents({ postId }) {
     const handleEditPost = () => {
         // 게시글 작성자의 ID
         const postUserId = Number(postData.user.userId);
-
         if (currentUserId === null) {
             alert("로그인 후 이용해주세요");
         }
-
         // 게시글 작성자와 현재 사용자가 동일한 경우에만 수정 가능
         else if (currentUserId === postUserId) {
             setIsEditing(true);
@@ -100,7 +99,6 @@ function Contents({ postId }) {
             alert("게시글 작성자와 현재 사용자가 다릅니다. 수정할 수 없습니다.");
         }
     };
-
     // 수정 완료 버튼 클릭 시 호출되는 함수
     const handleSaveEdit = () => {
         // 수정 완료 시 실행할 작업을 추가
@@ -137,7 +135,6 @@ function Contents({ postId }) {
     // 게시글 삭제 함수
     const handleDeletePost = () => {
         const postUserId = Number(postData.user.userId);
-
         if (currentUserId === null) {
             // User is not logged in, show an alert
             alert("로그인 후 이용해주세요.");

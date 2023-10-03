@@ -37,7 +37,6 @@ export const signupState = atom({
   },
 });
 
-
 export const bookmarkFoldersState = atom({
   key: "bookmarkFoldersState",
   default: [],

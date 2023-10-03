@@ -3,6 +3,7 @@ import styles from "./UploadForm.module.css";
 import axios from "axios";
 import { BsTrash3Fill } from "react-icons/bs";
 import { useRecoilValue } from "recoil";
+
 import { loginState } from "../../util/recoil/atom";
 import { useModal } from "../../hooks/useModal";
 
@@ -118,8 +119,6 @@ export default function UploadForm() {
             setDescription("");
             setTags([]);
             closeModal();
-
-            // 업로드 성공 시 alert 창 표시
             alert("업로드에 성공했습니다!");
         } catch (error) {
             setUploadError("죄송합니다. 문제가 발생했습니다.");
