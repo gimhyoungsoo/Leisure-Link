@@ -6,18 +6,29 @@ import { FaUser } from "react-icons/fa";
 import ButtonBookmark from "../IconButtons/ButtonBookmark";
 import ButtonRecommend from "../IconButtons/ButtonRecommend";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../util/state/LoginState";
-const BASE_URL = process.env.REACT_APP_API_URL;
+import { loginState } from "../../util/recoil/atom";
+import { useIconButtonAPI } from "../../hooks/useIconButtonAPI";
+import { useModal } from "../../hooks/useModal";
 
+const BASE_URL = process.env.REACT_APP_API_URL;
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY;
+
+const axiosConfig = {
+    headers: {
+        "x-cors-api-key": PROXY_KEY,
+    },
+};
 function Contents({ postId }) {
     //게시글 관련 상태
     const [postData, setPostData] = useState(null);
     const [editedCaption, setEditedCaption] = useState(""); // 수정한 캡션을 저장
     const [isEditing, setIsEditing] = useState(false);
+    const { getRecommend, recommendedPostId, getBookmark, bookmarkedPostId } = useIconButtonAPI();
+    const { closeModal } = useModal();
+
     //로그인 관련 상태
     const [currentUserId, setCurrentUserId] = useState(null);
-    const [recommendedPostId, setRecommendedPostId] = useState([]);
-    const [bookmarkedPostId, setBookmarkedPostId] = useState([]);
+
     const loginInfo = useRecoilValue(loginState);
 
     //이미지 반응형 관련 훅
@@ -44,74 +55,28 @@ function Contents({ postId }) {
     useEffect(() => {
         fetchPostData();
         if (loginInfo.login_status) {
-            setCurrentUserId(loginInfo.userId);
+            setCurrentUserId(Number(loginInfo.userId));
         }
     }, []);
 
     useEffect(() => {
         if (currentUserId !== null) {
-            getRecommmend();
-            getBookmark();
+            getRecommend(currentUserId);
+            getBookmark(currentUserId);
         }
     }, [currentUserId]);
 
     // 특정 게시글의 데이터를 받아오는 함수
     const fetchPostData = async () => {
         try {
-            const response = await axios.get(`${BASE_URL}/posts/${postId}`);
+            const response = await axios.get(`${BASE_URL}/posts/${postId}`, axiosConfig);
             setPostData(response.data);
             setEditedCaption(response.data.postCaption);
         } catch (error) {
             console.error("데이터를 가져오는 중 오류가 발생했습니다:", error);
         }
     };
-
-    // 추천 get 통신
-    const getRecommmend = async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}/recommend/${currentUserId}`);
-            const data = await response.data;
-            setRecommendedPostId(
-                data.map((el) => {
-                    return el.postId;
-                }),
-            );
-        } catch (error) {
-            console.error(error.code, "추천 정보 get 실패");
-        }
-    };
-
-    //북마크 get 통신
-    const getBookmark = async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}/bookmarks/${currentUserId}`);
-            const data = await response.data;
-            setBookmarkedPostId(data.map((el) => el.post_id));
-        } catch (error) {
-            console.error(error.code, "북마크 정보 get 실패");
-        }
-    };
-
-    // const renderIconButton = () => {
-    //     let result;
-    //     if (Array.isArray(recommendedPostId) && Array.isArray(bookmarkedPostId)) {
-    //         result = (
-    //             <>
-    //                 <ButtonRecommend postId={postId} isMarked={recommendedPostId.includes(Number(postId))} />
-    //                 <ButtonBookmark postId={postId} isMarked={bookmarkedPostId.includes(Number(postId))} />
-    //             </>
-    //         );
-    //     } else {
-    //         result = (
-    //             <>
-    //                 <ButtonRecommend postId={postId} isMarked={false} />
-    //                 <ButtonBookmark postId={postId} isMarked={false} />
-    //             </>
-    //         );
-    //     }
-    //     return result;
-    // };
-
+  
     function formatDate(dateString) {
         const date = new Date(dateString);
         const year = date.getFullYear();
@@ -123,12 +88,10 @@ function Contents({ postId }) {
     // 게시글 수정 함수
     const handleEditPost = () => {
         // 게시글 작성자의 ID
-        const postUserId = postData.user.userId;
-
+        const postUserId = Number(postData.user.userId);
         if (currentUserId === null) {
             alert("로그인 후 이용해주세요");
         }
-
         // 게시글 작성자와 현재 사용자가 동일한 경우에만 수정 가능
         else if (currentUserId === postUserId) {
             setIsEditing(true);
@@ -136,7 +99,6 @@ function Contents({ postId }) {
             alert("게시글 작성자와 현재 사용자가 다릅니다. 수정할 수 없습니다.");
         }
     };
-
     // 수정 완료 버튼 클릭 시 호출되는 함수
     const handleSaveEdit = () => {
         // 수정 완료 시 실행할 작업을 추가
@@ -155,10 +117,8 @@ function Contents({ postId }) {
                 tags: postData.tags, // 태그 정보는 그대로 사용
             };
             axios
-                .patch(`${BASE_URL}/posts/${postId}?userId=${currentUserId}`, editData)
+                .patch(`${BASE_URL}/posts/${postId}?userId=${currentUserId}`, editData, axiosConfig)
                 .then((response) => {
-                    console.log("게시글 수정 성공:", response.data);
-                    // 수정된 내용을 화면에 반영
                     setPostData({ ...postData, postCaption: editedCaption });
                     setIsEditing(false); // 수정 모드 종료
                 })
@@ -174,9 +134,7 @@ function Contents({ postId }) {
 
     // 게시글 삭제 함수
     const handleDeletePost = () => {
-        const postUserId = postData.user.userId;
-        console.log(postUserId, currentUserId);
-
+        const postUserId = Number(postData.user.userId);
         if (currentUserId === null) {
             // User is not logged in, show an alert
             alert("로그인 후 이용해주세요.");
@@ -184,14 +142,12 @@ function Contents({ postId }) {
         }
 
         // 게시글 작성자와 현재 사용자가 동일한 경우에만 삭제 가능
-        if (Number(currentUserId) === Number(postUserId)) {
+        if (currentUserId === Number(postUserId)) {
             // 게시글 ID와 유저 ID를 사용하여 DELETE 요청을 보냄
             axios
-                .delete(`${BASE_URL}/posts/${postId}?userId=${currentUserId}`)
+                .delete(`${BASE_URL}/posts/${postId}?userId=${currentUserId}`, axiosConfig)
                 .then((response) => {
-                    // 게시글 삭제가 성공한 경우 처리
-                    console.log("게시글 삭제 성공:", response.data);
-                    // 삭제 후 필요한 동작을 수행할 수 있습니다.
+                    closeModal();
                 })
                 .catch((error) => {
                     console.error("게시글 삭제 중 오류가 발생했습니다:", error);
@@ -211,8 +167,7 @@ function Contents({ postId }) {
                     </div>
                     <div>
                         <div className={styles.info_section}>
-
-                            {currentUserId === postData.user.userId && (
+                            {currentUserId === Number(postData.user.userId) && (
                                 <div>
                                     <button onClick={handleEditPost} className={styles.edit_button}>
                                         게시글 수정
@@ -254,22 +209,11 @@ function Contents({ postId }) {
                                 )}
                                 <p className={styles.username}>{postData.user.username}</p>
                                 {/* 추천, 북마크자리 */}
-                                {/* {Array.isArray(recommendedPostId) && Array.isArray(bookmarkedPostId)?
-                                <>
-                                    <ButtonRecommend
-                                        postId={postId}
-                                        isMarked={recommendedPostId.includes(Number(postId))}
-                                    />
-                                    <ButtonBookmark
-                                        postId={postId}
-                                        isMarked={bookmarkedPostId.includes(Number(postId))}
-                                    />
-                                </>
-                                :
-                                <>
-                                    <ButtonRecommend postId={postId} isMarked={false} />
-                                    <ButtonBookmark postId={postId} isMarked={false} />
-                                </>} */}
+                                <ButtonRecommend
+                                    postId={postId}
+                                    isMarked={recommendedPostId.includes(Number(postId))}
+                                />
+                                <ButtonBookmark postId={postId} isMarked={bookmarkedPostId.includes(Number(postId))} />
                             </div>
 
                             {/* 날짜 */}

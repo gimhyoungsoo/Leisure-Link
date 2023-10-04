@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRecoilState } from "recoil";
 import axios from "axios";
-import { bookmarkFoldersState } from "../../util/recoil/atom";
-import { loginState } from "../../util/state/LoginState";
+import { loginState,bookmarkFoldersState } from "../../util/recoil/atom";
 import addBtn from "../../assets/icon/myaddfolder.svg";
 import styles from "./BookmarkFolder.module.css";
 import folder_thumbnail from "../../assets/icon/bookmarkFolder.png";

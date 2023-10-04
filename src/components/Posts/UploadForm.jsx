@@ -3,10 +3,15 @@ import styles from "./UploadForm.module.css";
 import axios from "axios";
 import { BsTrash3Fill } from "react-icons/bs";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../util/state/LoginState";
-const BASE_URL = process.env.REACT_APP_API_URL;
 
-export default function UploadForm({ onClose }) {
+import { loginState } from "../../util/recoil/atom";
+import { useModal } from "../../hooks/useModal";
+
+const BASE_URL = process.env.REACT_APP_API_URL;
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY;
+
+export default function UploadForm() {
+    const { closeModal } = useModal();
     const [image, setImage] = useState(null);
     const [imageObjectURL, setImageObjectURL] = useState(null);
 
@@ -31,11 +36,6 @@ export default function UploadForm({ onClose }) {
             setCurrentUserId(loginInfo.userId);
         }
     }, []); // loginInfo 객체가 변경될 때 useEffect를 실행
-
-    // currentUserId가 null이 아닐 때에만 출력
-    if (currentUserId !== null) {
-        console.log(currentUserId);
-    }
 
     const removeTags = (indexToRemove) => {
         const filter = tags.filter((el, index) => index !== indexToRemove);
@@ -78,7 +78,6 @@ export default function UploadForm({ onClose }) {
                 setImage(file);
                 const objectURL = URL.createObjectURL(file);
                 setImageObjectURL(objectURL);
-                console.log(objectURL);
             };
         }
     };
@@ -102,8 +101,6 @@ export default function UploadForm({ onClose }) {
         formData.append("data", blob);
 
         const Alldata = Object.fromEntries(formData);
-        console.log("formdata", Alldata);
-        console.log(formData.get("postImage"));
 
         setUploading(true);
 
@@ -111,21 +108,17 @@ export default function UploadForm({ onClose }) {
             const axiosConfig = {
                 headers: {
                     "Content-Type": "multipart/form-data",
+                    "x-cors-api-key": PROXY_KEY,
                 },
             };
 
             const response = await axios.post(`${BASE_URL}/posts`, formData, axiosConfig);
-            console.log(response.data);
-
             setUploadSuccess(true);
-            console.log(uploadSuccess);
             setImage(null);
             setPlace("");
             setDescription("");
             setTags([]);
-            onClose();
-
-            // 업로드 성공 시 alert 창 표시
+            closeModal();
             alert("업로드에 성공했습니다!");
         } catch (error) {
             setUploadError("죄송합니다. 문제가 발생했습니다.");
@@ -227,33 +220,10 @@ export default function UploadForm({ onClose }) {
                         </div>
                     </div>
                     <div className={styles.confirm_section}>
-                        {/* 정보 제공 동의 */}
-                        {/* 위치 정보 동의 체크박스 */}
-                        <label className={styles.checkbox}>
-                            <input
-                                type="checkbox"
-                                checked={addressPermission}
-                                onChange={() => setAddressPermission(!addressPermission)}
-                                required
-                            />
-                            위치 정보 수집에 동의하시나요?
-                        </label>
-
-                        {/* 댓글 기능 해제 체크박스 */}
-                        <label className={styles.checkbox}>
-                            <input
-                                type="checkbox"
-                                checked={commentPermission}
-                                onChange={() => setCommentPermission(!commentPermission)}
-                                required
-                            />
-                            댓글 기능 해제하기
-                        </label>
                         <button
                             type="submit"
                             className={styles.submit_button}
                             disabled={uploading} // 업로드 중일 때 버튼 비활성화
-                            // onClick={handleSubmit}
                         >
                             {uploading ? "업로드 중..." : "게시하기"}
                         </button>

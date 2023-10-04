@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./Button.module.css";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../util/state/LoginState";
+import { loginState } from "../../util/recoil/atom";
 import { useNavigate } from "react-router-dom";
 import { useModal } from "../../hooks/useModal";
 import { useIconButtonAPI } from "../../hooks/useIconButtonAPI";
@@ -23,6 +23,12 @@ function ButtonBookmark({ postId, isMarked }) {
             setUserId(loginInfo.userId);
         }
     }, []);
+
+    useEffect(() => {
+        if (isBookmarked !== isMarked) {
+            setIsBookmarked(isMarked);
+        }
+    }, [isMarked]);
 
     const handleBookmark = () => {
         if (!isLogin) {

@@ -1,6 +1,9 @@
 import { useRecoilState } from 'recoil';
 import axios from 'axios';
-import { loginState } from '../state/LoginState';
+import { loginState } from '../recoil/atom';
+
+const BASE_URL = process.env.REACT_APP_API_URL;
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY
 
 export function LogoutActions() {
   const [loginInfo, setLoginInfo] = useRecoilState(loginState);
@@ -8,11 +11,12 @@ export function LogoutActions() {
 
   const handleLogout = async () => {
     try {
-        const response = await axios.post('http://ec2-3-36-197-34.ap-northeast-2.compute.amazonaws.com:8080/users/logout',
+        const response = await axios.post(`${BASE_URL}/users/logout`,
           { email:loginInfo.email },
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
+              "x-cors-api-key": PROXY_KEY,
             },
           }
         );

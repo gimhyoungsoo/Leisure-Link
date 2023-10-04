@@ -3,10 +3,11 @@ import useIntersectionObserver from "../../hooks/useIntersectionObserver";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useRecoilValue } from "recoil";
-import { modalState } from "../../util/recoil/atom";
-import { loginState } from "../../util/state/LoginState";
+import { loginState, modalState } from "../../util/recoil/atom";
 import { useIconButtonAPI } from "../../hooks/useIconButtonAPI";
 import styles from "./ImageList.module.css";
+
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY;
 
 function ImageList({ url }) {
     const loginInfo = useRecoilValue(loginState);
@@ -42,6 +43,7 @@ function ImageList({ url }) {
 
     useEffect(() => {
         if (isLogin && !modalRecoilValue.isOpen) {
+            //게시물 업로드나 삭제시 모달 닫힌 후의 메인페이지에 반영되어야 함
             getRecommend(userId);
             getBookmark(userId);
         }
@@ -49,12 +51,15 @@ function ImageList({ url }) {
 
     const getImageData = async () => {
         try {
-            const config = {
+            const AxiosConfig = {
+                headers: {
+                    "x-cors-api-key": PROXY_KEY,
+                },
                 params: {
                     page: pageNum,
                 },
             };
-            const response = await axios.get(url, config);
+            const response = await axios.get(url, AxiosConfig);
             const targetObj = response.data;
             DistributeImage(targetObj.data);
             setPageNum((prev) => prev + 1);

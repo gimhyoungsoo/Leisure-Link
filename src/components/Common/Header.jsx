@@ -4,18 +4,27 @@ import { Link } from "react-router-dom";
 import { useModal } from "../../hooks/useModal";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
-import { loginState } from "../../util/state/LoginState"
+import { loginState } from "../../util/recoil/atom";
 import { LogoutActions } from "../../util/action/LogoutAction";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_API_URL;
+const PROXY_KEY = process.env.REACT_APP_PROXY_KEY;
+
+const axiosConfig = {
+    headers: {
+        "x-cors-api-key": PROXY_KEY,
+    },
+};
 
 function Header() {
     const [isLogin, setIsLogin] = useState(false);
     const [userName, setUserName] = useState("사용자");
     const loginInfo = useRecoilValue(loginState);
     const { handleLogout } = LogoutActions();
-    const {openModal} = useModal();
+    const { openModal, closeModal } = useModal();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (loginInfo.login_status) {
@@ -26,7 +35,7 @@ function Header() {
 
     const fetchUserData = async (userId) => {
         try {
-            const response = await axios.get(`${BASE_URL}/users/${userId}`);
+            const response = await axios.get(`${BASE_URL}/users/${userId}`, axiosConfig);
             const data = response.data.username;
             setUserName(data);
         } catch (error) {
@@ -35,8 +44,16 @@ function Header() {
     };
 
     const handleUploadClick = () => {
-        openModal("upload")
-    }
+        if (!isLogin) {
+            const loginConfirm = window.confirm("로그인이 필요합니다. 로그인하시겠습니까?");
+            if (loginConfirm) {
+                navigate("/LoginPage");
+                closeModal();
+            }
+            return null;
+        }
+        openModal("upload");
+    };
 
     return (
         <header className={styles.header}>
@@ -59,7 +76,7 @@ function Header() {
                 </div>
                 <div className={`${styles.right} ${styles.flex}`}>
                     <div className={styles.add_picture} onClick={handleUploadClick}>
-                            <button>사진 올리기</button>
+                        <button>사진 올리기</button>
                     </div>
                     <div className={styles.user_name}>
                         {isLogin ? (

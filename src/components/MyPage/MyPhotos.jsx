@@ -1,5 +1,5 @@
 import ImageList from "../../components/Image/ImageList";
-import { loginState } from "../../util/state/LoginState";
+import { loginState } from "../../util/recoil/atom";
 import { useRecoilState } from "recoil";
 
 export default function MyPhotos() {
