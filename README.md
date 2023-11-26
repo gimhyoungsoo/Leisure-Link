@@ -32,13 +32,13 @@
 <br/>
 <br/>
 
-## 1. **레저링크+** (개선된 작업물)
+## 1. **레저링크+(플러스)** (개선된 작업물)
 
-레저링크+ 는 팀 작업으로 진행했던 레저링크 프로젝트를 개선한 버전입니다.
+레저링크+(플러스) 는 팀 작업으로 진행했던 레저링크 프로젝트를 개선한 버전입니다.
 ![image](https://github.com/gimhyoungsoo/Leisure-Link/assets/85207564/9d356c0a-81f7-4856-896f-9e3b7fe3fdd3)
 
 
->[**레저링크+ 배포 링크**: https://leisurelink-36f00.web.app/](https://leisurelink-36f00.web.app/)
+>[**레저링크+(플러스) 배포 링크**: https://leisurelink-36f00.web.app/](https://leisurelink-36f00.web.app/)
 >
 >**개발 기간**
 >23/09/26 ~ 23/10/03
