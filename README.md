@@ -21,11 +21,6 @@
 <img src="https://img.shields.io/badge/Amazon AWS-232F3E?style=for-the-badge&logo=AmazonAWS&logoColor=white"> <img src="https://img.shields.io/badge/Amazon EC2-FF9900?style=for-the-badge&logo=AmazonEC2&logoColor=white"> <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=Firebase&logoColor=white"> 
 
 <br/>
-
-<em> - contact -</em>
-
-  <img src="https://img.shields.io/badge/김형수-D14836?style=for-the-badge&logo=Gmail&logoColor=white&link=mailto:gimhyoungsoo@gmail.com"/>
-
 </div>
 
 <br/>
