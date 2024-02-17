@@ -25,58 +25,59 @@
 
 <br/>
 <br/>
-<br/>
 
-## 1. **레저링크+(플러스)** (개선된 작업물)
+### 1. **레저링크+(플러스)** (개선된 작업물)
 
 레저링크+(플러스) 는 팀 작업으로 진행했던 레저링크 프로젝트를 개선한 버전입니다.
 ![image](https://github.com/gimhyoungsoo/Leisure-Link/assets/85207564/9d356c0a-81f7-4856-896f-9e3b7fe3fdd3)
 
 
->[**레저링크+(플러스) 배포 링크**: https://leisurelink-36f00.web.app/](https://leisurelink-36f00.web.app/)
->
->**개발 기간**
->23/09/26 ~ 23/10/03
->
->**참여자**:
-> [FE] **김형수**
->
->> ### 2. 레저링크
->>레저링크는 부트캠프에서 진행한 팀 프로젝트의 프로그램입니다.
->>레저링크는 여행지에서 찍은 사진을 공유하고 싶다는 생각에서 시작된, 여행지의 사진을 공유하는 플랫폼 웹 사이트입니다.
->> 
->>[깃허브 저장소](https://github.com/codestates-seb/seb45_main_030)
->> 
->>[서비스 매뉴얼](https://docs.google.com/presentation/d/1kf5DykqZihYaiozTICohrnm0y2izw0VrStzX95gFwqw/edit?usp=sharing)
->> 
->>[기술 발표 영상](https://www.youtube.com/watch?v=CJrZyZfZDsw)
->> 
->> 개발 기간: 23/08/24 ~ 23/09/20
->> 
->>**참여자**: [FE] **김형수** 본인 포함 4명 , [BE] 3명,  총 7명
+[**레저링크+(플러스) 배포 링크**: https://leisurelink-36f00.web.app/](https://leisurelink-36f00.web.app/)
 
+**개발 기간**
+23/09/26 ~ 23/10/03
+
+**참여자**:
+ [FE] **김형수**
+
+> ### 2. 레저링크
+>레저링크는 부트캠프에서 진행한 팀 프로젝트의 프로그램입니다.
+>레저링크는 여행지에서 찍은 사진을 공유하고 싶다는 생각에서 시작된, 여행지의 사진을 공유하는 플랫폼 웹 사이트입니다.
+> 
+>[깃허브 저장소](https://github.com/codestates-seb/seb45_main_030)
+> 
+>[서비스 매뉴얼](https://docs.google.com/presentation/d/1kf5DykqZihYaiozTICohrnm0y2izw0VrStzX95gFwqw/edit?usp=sharing)
+> 
+>[기술 발표 영상](https://www.youtube.com/watch?v=CJrZyZfZDsw)
+> 
+> 개발 기간: 23/08/24 ~ 23/09/20
+> 
+>**참여자**: [FE] **김형수** 본인 포함 4명 , [BE] 3명,  총 7명
+
+<br/>
 <br/>
 
 
 
 # 개발 및 개선 내용
 
-## 개발 내용
+### 개발 내용
 레저링크 
 개발 내용
 - 메인페이지 컴포넌트
 - 이미지 목록, 이미지 아이템 컴포넌트
 - 추천, 북마크 컴포넌트
-- 프론트엔드 팀원들이 작성한 코드 통합 및 충돌 수정
+- 프론트엔드 팀원의 코드 통합 및 충돌 수정
 
 
-## 주요 개선 내용
+## 🛠️ 주요 개선 내용
 
 1. 모달 컴포넌트 전역상태 전달
-    - 이슈 링크: [모달 창을 닫을 때 메인페이지 추천/북마크 정보 재요청및 리렌더링 #4](https://github.com/gimhyoungsoo/Leisure-Link/issues/4)
+    - 이슈 링크: [모든 모달 창이 중첩되는 오류 #4](https://github.com/gimhyoungsoo/Leisure-Link/issues/4)
 
 2. 모달 창 컴포넌트 개선
-    - 이슈 링크: [모달 창 컴포넌트 개선 #3](https://github.com/gimhyoungsoo/Leisure-Link/issues/3)
+    - 이슈 링크: [모달 창 추상화 적용 #3](https://github.com/gimhyoungsoo/Leisure-Link/issues/3)
+
 
 3. 모달 창 레이아웃 이미지 반응형 개선
     - 이슈 링크: [모달창 레이아웃 반응형 개선 #7](https://github.com/gimhyoungsoo/Leisure-Link/issues/7)
